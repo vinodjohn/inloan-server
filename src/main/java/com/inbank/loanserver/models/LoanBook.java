@@ -6,14 +6,14 @@ import lombok.Data;
 import java.util.UUID;
 
 /**
- * Incoming loan requests
+ * Incoming loan requests and its decisions
  *
  * @author vinodjohn
  * @created 29.08.2024
  */
 @Data
 @Entity
-public class LoanRequest {
+public class LoanBook {
     @Id
     @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -22,16 +22,16 @@ public class LoanRequest {
     @ManyToOne(fetch = FetchType.EAGER)
     private Person person;
 
-    private int loanAmount;
-    private int loanPeriodMonths;
+    private int requestAmount;
+    private int requestPeriod;
     private int creditScore;
 
     @Enumerated(EnumType.STRING)
     private LoanDecisionStatus loanDecisionStatus;
 
-    private int loanDecisionMinAmount;
-    private int loanDecisionMaxAmount;
-    private int loanDecisionMinPeriod;
-    private int loanDecisionMaxPeriod;
+    private int decisionMinAmount;
+    private int decisionMaxAmount;
+    private int decisionMinPeriod;
+    private int decisionMaxPeriod;
     private boolean isActive;
 }
