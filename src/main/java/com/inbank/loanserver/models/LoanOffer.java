@@ -2,6 +2,7 @@ package com.inbank.loanserver.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.UUID;
 
@@ -13,7 +14,8 @@ import java.util.UUID;
  */
 @Data
 @Entity
-public class LoanOffer {
+@EqualsAndHashCode(callSuper = true)
+public final class LoanOffer extends Auditable<String> {
     @Id
     @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
