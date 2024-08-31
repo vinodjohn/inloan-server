@@ -13,7 +13,7 @@ import java.util.UUID;
  */
 @Data
 @Entity
-public class LoanBook {
+public class LoanApplication {
     @Id
     @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,14 +24,6 @@ public class LoanBook {
 
     private int requestAmount;
     private int requestPeriod;
-    private int creditScore;
 
-    @Enumerated(EnumType.STRING)
-    private LoanDecisionStatus loanDecisionStatus;
-
-    private int decisionMinAmount;
-    private int decisionMaxAmount;
-    private int decisionMinPeriod;
-    private int decisionMaxPeriod;
     private boolean isActive;
 }

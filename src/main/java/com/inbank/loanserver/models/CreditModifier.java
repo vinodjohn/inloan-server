@@ -21,7 +21,9 @@ public class CreditModifier {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String name;
+
     private int value;
     private boolean isActive;
 }

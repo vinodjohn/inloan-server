@@ -19,7 +19,9 @@ public class KeyValueStore {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(nullable = false, unique = true)
     private String key;
+
     private int value;
     private boolean isActive;
 }

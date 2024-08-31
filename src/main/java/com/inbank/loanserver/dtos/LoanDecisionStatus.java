@@ -1,4 +1,4 @@
-package com.inbank.loanserver.models;
+package com.inbank.loanserver.dtos;
 
 /**
  * Loan Decision
