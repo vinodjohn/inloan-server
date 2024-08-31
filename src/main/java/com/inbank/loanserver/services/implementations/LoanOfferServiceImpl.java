@@ -44,7 +44,7 @@ public class LoanOfferServiceImpl implements LoanOfferService {
     }
 
     @Override
-    public Page<LoanOffer> findLoanOffersByLoanApplication(Pageable pageable, LoanApplication loanApplication) throws LoanOfferNotFoundException {
+    public Page<LoanOffer> findLoanOffersByLoanApplication(Pageable pageable, LoanApplication loanApplication) {
         return loanOfferRepository.findAllByLoanApplication(loanApplication, pageable);
     }
 

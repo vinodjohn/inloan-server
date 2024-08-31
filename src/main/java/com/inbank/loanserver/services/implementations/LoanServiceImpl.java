@@ -51,6 +51,7 @@ public class LoanServiceImpl implements LoanService {
             Set<LoanOffer> loanOffers = new HashSet<>();
             var minLoanAmount = keyValueStoreService.getMinimumLoanAmount().getValue();
             var sum = creditScore * loanApplication.getRequestAmount();
+            var minLoanPeriod = keyValueStoreService.getMinimumLoanPeriod().getValue();
 
             if (sum > minLoanAmount) {
                 // Offer with suitable amount based on requested period
@@ -74,8 +75,7 @@ public class LoanServiceImpl implements LoanService {
 
             // Offer with maximum amount based on credit modifier and credit coefficient with suitable period
             LoanOffer loanOfferAdv = loanOfferService.createLoanOffer(getAdvancedLoanOffer(loanApplication,
-                    creditScore, creditCoefficient, minLoanAmount, maxLoanAmount, loanApplication.getRequestPeriod(),
-                    maxLoanPeriod));
+                    creditScore, creditCoefficient, minLoanAmount, maxLoanAmount, minLoanPeriod, maxLoanPeriod));
             loanOffers.add(loanOfferAdv);
 
             return getLoanResponse(true, loanOffers);
