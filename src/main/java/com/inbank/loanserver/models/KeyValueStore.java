@@ -2,7 +2,6 @@ package com.inbank.loanserver.models;
 
 import com.inbank.loanserver.utils.constraints.ValidKeyValueStore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
