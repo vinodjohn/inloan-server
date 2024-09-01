@@ -65,7 +65,7 @@ public class KeyValueStoreServiceImpl implements KeyValueStoreService {
     @Override
     public KeyValueStore updateKeyValueStore(KeyValueStore keyValueStore) throws KeyValueStoreNotFoundException {
         if (findKeyValueStoreById(keyValueStore.getId()) != null) {
-            keyValueStoreRepository.save(keyValueStore);
+            return keyValueStoreRepository.save(keyValueStore);
         }
 
         return null;

@@ -118,10 +118,7 @@ public class ValidationServiceImpl implements ValidationService {
 
     // PRIVATE METHODS //
     private String getExceptionMessage(Object object, String fieldName, boolean isAlreadyExists) {
-        String className = ClassUtils.getShortName(object.getClass()).concat("'s");
-        className = Pattern.compile("(?<=[a-z])(?=[A-Z])")
-                .matcher(className)
-                .replaceAll(" ");
+        String className = LoanUtils.getStringOfClassName(object);
 
         return isAlreadyExists ? MessageFormat.format("{0} {1} already exists!", className, fieldName) :
                 MessageFormat.format("Invalid {0} {1}", className, fieldName);

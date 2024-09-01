@@ -1,9 +1,11 @@
 package com.inbank.loanserver.utils;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.util.ClassUtils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 /**
@@ -19,6 +21,15 @@ public class LoanUtils {
         } else {
             return Sort.by(sort).descending();
         }
+    }
+
+    public static String getStringOfClassName(Object object) {
+        String className = ClassUtils.getShortName(object.getClass()).concat("'s");
+        className = Pattern.compile("(?<=[a-z])(?=[A-Z])")
+                .matcher(className)
+                .replaceAll(" ");
+
+        return className;
     }
 
     public static boolean isPersonalIdCodeValid(String idNumber) {
