@@ -4,6 +4,7 @@ import com.inbank.loanserver.dtos.ObjectListDto;
 import com.inbank.loanserver.exceptions.KeyValueStoreNotFoundException;
 import com.inbank.loanserver.models.KeyValueStore;
 import com.inbank.loanserver.services.KeyValueStoreService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,13 +53,13 @@ public class KeyValueStoreController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createKeyValueStore(@RequestBody KeyValueStore keyValueStore) {
+    public ResponseEntity<?> createKeyValueStore(@Valid @RequestBody KeyValueStore keyValueStore) {
         KeyValueStore newKeyValueStore = keyValueStoreService.createKeyValueStore(keyValueStore);
         return new ResponseEntity<>(newKeyValueStore, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateKeyValueStore(@RequestBody KeyValueStore keyValueStore) throws KeyValueStoreNotFoundException {
+    public ResponseEntity<?> updateKeyValueStore(@Valid @RequestBody KeyValueStore keyValueStore) throws KeyValueStoreNotFoundException {
         KeyValueStore updatedKeyValueStore = keyValueStoreService.updateKeyValueStore(keyValueStore);
         return ResponseEntity.ok(updatedKeyValueStore);
     }

@@ -9,6 +9,7 @@ import com.inbank.loanserver.models.Person;
 import com.inbank.loanserver.services.LoanApplicationService;
 import com.inbank.loanserver.services.LoanService;
 import com.inbank.loanserver.services.PersonService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,7 +36,7 @@ public class LoanController {
     private PersonService personService;
 
     @PostMapping
-    public ResponseEntity<LoanResponse> getLoanDecision(@RequestBody LoanRequest loanRequest)
+    public ResponseEntity<LoanResponse> getLoanDecision(@Valid @RequestBody LoanRequest loanRequest)
             throws PersonNotFoundException, KeyValueStoreNotFoundException {
         Person person = personService.findPersonByPersonalIdCode(loanRequest.personalIdCode());
 

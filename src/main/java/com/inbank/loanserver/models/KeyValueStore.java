@@ -1,6 +1,8 @@
 package com.inbank.loanserver.models;
 
+import com.inbank.loanserver.utils.constraints.ValidKeyValueStore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +16,7 @@ import java.util.UUID;
  */
 @Data
 @Entity
+@ValidKeyValueStore
 @EqualsAndHashCode(callSuper = true)
 public final class KeyValueStore extends Auditable<String> {
     @Id
@@ -25,5 +28,6 @@ public final class KeyValueStore extends Auditable<String> {
     private String key;
 
     private int value;
+
     private boolean isActive;
 }

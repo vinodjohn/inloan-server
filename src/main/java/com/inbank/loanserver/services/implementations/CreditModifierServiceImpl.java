@@ -56,6 +56,17 @@ public class CreditModifierServiceImpl implements CreditModifierService {
     }
 
     @Override
+    public CreditModifier findRandomCreditModifier() throws CreditModifierNotFoundException {
+        Optional<CreditModifier> optionalCreditModifier = creditModifierRepository.findRandom();
+
+        if (optionalCreditModifier.isEmpty()) {
+            throw new CreditModifierNotFoundException("No Random found!");
+        }
+
+        return optionalCreditModifier.get();
+    }
+
+    @Override
     public Page<CreditModifier> findAllCreditModifiers(Pageable pageable) {
         return creditModifierRepository.findAll(pageable);
     }

@@ -1,5 +1,6 @@
 package com.inbank.loanserver.models;
 
+import com.inbank.loanserver.utils.constraints.ValidPerson;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,6 +15,7 @@ import java.util.UUID;
  */
 @Data
 @Entity
+@ValidPerson
 @EqualsAndHashCode(callSuper = true)
 public final class Person extends Auditable<String> {
     @Id

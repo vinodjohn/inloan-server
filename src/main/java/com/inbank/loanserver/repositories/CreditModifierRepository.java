@@ -1,6 +1,7 @@
 package com.inbank.loanserver.repositories;
 
 import com.inbank.loanserver.models.CreditModifier;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,7 @@ import java.util.UUID;
 public interface CreditModifierRepository extends PagingAndSortingRepository<CreditModifier, UUID>,
         ListCrudRepository<CreditModifier, UUID> {
     Optional<CreditModifier> findByName(String name);
+
+    @Query(value = "SELECT * FROM credit_modifier ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
+    Optional<CreditModifier> findRandom();
 }

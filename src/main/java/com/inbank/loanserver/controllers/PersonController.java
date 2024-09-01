@@ -1,9 +1,11 @@
 package com.inbank.loanserver.controllers;
 
 import com.inbank.loanserver.dtos.ObjectListDto;
+import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.PersonNotFoundException;
 import com.inbank.loanserver.models.Person;
 import com.inbank.loanserver.services.PersonService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,13 +53,13 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPerson(@RequestBody Person person) {
+    public ResponseEntity<?> createPerson(@Valid @RequestBody Person person) throws CreditModifierNotFoundException {
         Person newPerson = personService.createPerson(person);
         return new ResponseEntity<>(newPerson, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<?> updatePerson(@RequestBody Person person) throws PersonNotFoundException {
+    public ResponseEntity<?> updatePerson(@Valid @RequestBody Person person) throws PersonNotFoundException {
         Person updatedPerson = personService.updatePerson(person);
         return ResponseEntity.ok(updatedPerson);
     }

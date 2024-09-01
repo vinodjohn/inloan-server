@@ -22,4 +22,8 @@ public class Constants {
         public static final String MAXIMUM_LOAN_PERIOD = "MAXIMUM_LOAN_PERIOD_MONTHS";
         public static final String CREDIT_COEFFICIENT = "CREDIT_COEFFICIENT";
     }
+
+    public static class Message {
+        public static final String INVALID_ = "Invalid plate number!";
+    }
 }

@@ -39,6 +39,13 @@ public interface CreditModifierService {
     CreditModifier findCreditModifierByName(String name) throws CreditModifierNotFoundException;
 
     /**
+     * To find a random credit modifier
+     *
+     * @return CreditModifier
+     */
+    CreditModifier findRandomCreditModifier() throws CreditModifierNotFoundException;
+
+    /**
      * To find all credit modifiers
      *
      * @param pageable Pageable of credit modifier

@@ -1,8 +1,11 @@
 package com.inbank.loanserver.services.implementations;
 
+import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.PersonNotFoundException;
+import com.inbank.loanserver.models.CreditModifier;
 import com.inbank.loanserver.models.Person;
 import com.inbank.loanserver.repositories.PersonRepository;
+import com.inbank.loanserver.services.CreditModifierService;
 import com.inbank.loanserver.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,8 +28,16 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private PersonRepository personRepository;
 
+    @Autowired
+    private CreditModifierService creditModifierService;
+
     @Override
-    public Person createPerson(Person person) {
+    public Person createPerson(Person person) throws CreditModifierNotFoundException {
+        if (person.getCreditModifier() == null) {
+            CreditModifier randomCreditModifier = creditModifierService.findRandomCreditModifier();
+            person.setCreditModifier(randomCreditModifier);
+        }
+
         person.setActive(true);
         return personRepository.save(person);
     }

@@ -52,12 +52,6 @@ public class LoanApplicationController {
         return ResponseEntity.ok(loanApplication);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createLoanApplication(@RequestBody LoanApplication loanApplication) {
-        LoanApplication newLoanApplication = loanApplicationService.createLoanApplication(loanApplication);
-        return new ResponseEntity<>(newLoanApplication, HttpStatus.CREATED);
-    }
-
     @PutMapping
     public ResponseEntity<?> updateLoanApplication(@RequestBody LoanApplication loanApplication) throws LoanApplicationNotFoundException {
         LoanApplication updatedLoanApplication = loanApplicationService.updateLoanApplication(loanApplication);

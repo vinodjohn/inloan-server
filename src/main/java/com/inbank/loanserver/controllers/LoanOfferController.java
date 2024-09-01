@@ -51,12 +51,6 @@ public class LoanOfferController {
         return ResponseEntity.ok(loanOffer);
     }
 
-    @PostMapping
-    public ResponseEntity<?> createLoanOffer(@RequestBody LoanOffer loanOffer) {
-        LoanOffer newLoanOffer = loanOfferService.createLoanOffer(loanOffer);
-        return new ResponseEntity<>(newLoanOffer, HttpStatus.CREATED);
-    }
-
     @PutMapping
     public ResponseEntity<?> updateLoanOffer(@RequestBody LoanOffer loanOffer) throws LoanOfferNotFoundException {
         LoanOffer updatedLoanOffer = loanOfferService.updateLoanOffer(loanOffer);

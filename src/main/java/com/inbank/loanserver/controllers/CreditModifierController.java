@@ -4,6 +4,7 @@ import com.inbank.loanserver.dtos.ObjectListDto;
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.models.CreditModifier;
 import com.inbank.loanserver.services.CreditModifierService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -52,13 +53,13 @@ public class CreditModifierController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createCreditModifier(@RequestBody CreditModifier creditModifier) {
+    public ResponseEntity<?> createCreditModifier(@Valid @RequestBody CreditModifier creditModifier) {
         CreditModifier newCreditModifier = creditModifierService.createCreditModifier(creditModifier);
         return new ResponseEntity<>(newCreditModifier, HttpStatus.CREATED);
     }
 
     @PutMapping
-    public ResponseEntity<?> updateCreditModifier(@RequestBody CreditModifier creditModifier) throws CreditModifierNotFoundException {
+    public ResponseEntity<?> updateCreditModifier(@Valid @RequestBody CreditModifier creditModifier) throws CreditModifierNotFoundException {
         CreditModifier updatedCreditModifier = creditModifierService.updateCreditModifier(creditModifier);
         return ResponseEntity.ok(updatedCreditModifier);
     }

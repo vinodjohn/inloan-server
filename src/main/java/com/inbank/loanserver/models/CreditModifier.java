@@ -1,6 +1,8 @@
 package com.inbank.loanserver.models;
 
+import com.inbank.loanserver.utils.constraints.ValidCreditModifier;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,6 +17,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@ValidCreditModifier
 @EqualsAndHashCode(callSuper = true)
 public final class CreditModifier extends Auditable<String> {
     @Id
@@ -26,5 +29,6 @@ public final class CreditModifier extends Auditable<String> {
     private String name;
 
     private int value;
+
     private boolean isActive;
 }
