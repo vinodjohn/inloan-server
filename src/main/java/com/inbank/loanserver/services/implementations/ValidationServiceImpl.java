@@ -15,10 +15,8 @@ import com.inbank.loanserver.services.ValidationService;
 import com.inbank.loanserver.utils.LoanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ClassUtils;
 
 import java.text.MessageFormat;
-import java.util.regex.Pattern;
 
 /**
  * Implementation of ValidationService
