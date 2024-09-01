@@ -1,5 +1,6 @@
 package com.inbank.loanserver.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,5 +28,6 @@ public final class LoanApplication extends Auditable<String> {
     private int requestAmount;
     private int requestPeriod;
 
+    @JsonProperty("isActive")
     private boolean isActive;
 }

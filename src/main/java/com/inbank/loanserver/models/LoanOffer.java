@@ -1,5 +1,6 @@
 package com.inbank.loanserver.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,5 +33,6 @@ public final class LoanOffer extends Auditable<String> {
     @Enumerated(EnumType.STRING)
     private LoanOfferStatus loanOfferStatus;
 
+    @JsonProperty("isActive")
     private boolean isActive;
 }

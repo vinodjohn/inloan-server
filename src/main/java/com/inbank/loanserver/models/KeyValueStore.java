@@ -1,5 +1,6 @@
 package com.inbank.loanserver.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.inbank.loanserver.utils.constraints.ValidKeyValueStore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -28,5 +29,6 @@ public final class KeyValueStore extends Auditable<String> {
 
     private int value;
 
+    @JsonProperty("isActive")
     private boolean isActive;
 }
