@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.inbank.loanserver.utils.Constants.KvStore.*;
+
 /**
  * Implementation of KeyValueStoreService
  *
@@ -85,26 +87,26 @@ public class KeyValueStoreServiceImpl implements KeyValueStoreService {
 
     @Override
     public KeyValueStore getMinimumLoanAmount() throws KeyValueStoreNotFoundException {
-        return findKeyValueStoreByKey("MINIMUM_LOAN_AMOUNT");
+        return findKeyValueStoreByKey(MINIMUM_LOAN_AMOUNT);
     }
 
     @Override
     public KeyValueStore getMaximumLoanAmount() throws KeyValueStoreNotFoundException {
-        return findKeyValueStoreByKey("MAXIMUM_LOAN_AMOUNT");
+        return findKeyValueStoreByKey(MAXIMUM_LOAN_AMOUNT);
     }
 
     @Override
     public KeyValueStore getMinimumLoanPeriod() throws KeyValueStoreNotFoundException {
-        return findKeyValueStoreByKey("MINIMUM_LOAN_PERIOD");
+        return findKeyValueStoreByKey(MINIMUM_LOAN_PERIOD);
     }
 
     @Override
     public KeyValueStore getMaximumLoanPeriod() throws KeyValueStoreNotFoundException {
-        return findKeyValueStoreByKey("MAXIMUM_LOAN_PERIOD");
+        return findKeyValueStoreByKey(MAXIMUM_LOAN_PERIOD);
     }
 
     @Override
     public KeyValueStore getCreditCoefficient() throws KeyValueStoreNotFoundException {
-        return findKeyValueStoreByKey("CREDIT_COEFFICIENT");
+        return findKeyValueStoreByKey(CREDIT_COEFFICIENT);
     }
 }

@@ -56,7 +56,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     @Override
     public LoanApplication updateLoanApplication(LoanApplication loanApplication) throws LoanApplicationNotFoundException {
         if (findLoanApplicationById(loanApplication.getId()) != null) {
-            loanApplicationRepository.save(loanApplication);
+           return loanApplicationRepository.save(loanApplication);
         }
 
         return null;

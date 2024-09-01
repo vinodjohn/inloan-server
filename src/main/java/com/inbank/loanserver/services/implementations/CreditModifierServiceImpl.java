@@ -63,7 +63,7 @@ public class CreditModifierServiceImpl implements CreditModifierService {
     @Override
     public CreditModifier updateCreditModifier(CreditModifier creditModifier) throws CreditModifierNotFoundException {
         if (findCreditModifierById(creditModifier.getId()) != null) {
-            creditModifierRepository.save(creditModifier);
+            return creditModifierRepository.save(creditModifier);
         }
 
         return null;

@@ -36,7 +36,7 @@ public interface PersonService {
      * @param personalIdCode personalId code of a person
      * @return Page of person
      */
-    Person findPersonsByPersonalIdCode(String personalIdCode) throws PersonNotFoundException;
+    Person findPersonByPersonalIdCode(String personalIdCode) throws PersonNotFoundException;
 
     /**
      * To find all persons

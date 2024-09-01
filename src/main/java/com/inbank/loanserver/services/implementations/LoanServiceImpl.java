@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,16 +42,17 @@ public class LoanServiceImpl implements LoanService {
             return getLoanResponse(false, Collections.emptySet());
         }
 
-        var creditScore = (creditModifier / loanApplication.getRequestAmount()) * loanApplication.getRequestPeriod();
+        float creditScore =
+                ((float) creditModifier / loanApplication.getRequestAmount()) * loanApplication.getRequestPeriod();
         var creditCoefficient = keyValueStoreService.getCreditCoefficient().getValue();
         var maxLoanPeriod = keyValueStoreService.getMaximumLoanPeriod().getValue();
         var maxLoanAmount = keyValueStoreService.getMaximumLoanAmount().getValue();
+        Set<LoanOffer> loanOffers = new HashSet<>();
 
         // If less-eligible
         if (creditScore < creditCoefficient) {
-            Set<LoanOffer> loanOffers = new HashSet<>();
             var minLoanAmount = keyValueStoreService.getMinimumLoanAmount().getValue();
-            var sum = creditScore * loanApplication.getRequestAmount();
+            var sum = Math.round(creditScore * loanApplication.getRequestAmount());
             var minLoanPeriod = keyValueStoreService.getMinimumLoanPeriod().getValue();
 
             if (sum > minLoanAmount) {
@@ -78,16 +80,13 @@ public class LoanServiceImpl implements LoanService {
                     creditScore, creditCoefficient, minLoanAmount, maxLoanAmount, minLoanPeriod, maxLoanPeriod));
             loanOffers.add(loanOfferAdv);
 
-            return getLoanResponse(true, loanOffers);
         } else {
-            Set<LoanOffer> loanOffers = new HashSet<>();
-
             // Offer with requested amount and requested period
             LoanOffer loanOfferBasic = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,
                     loanApplication.getRequestAmount(), loanApplication.getRequestPeriod(), maxLoanPeriod));
             loanOffers.add(loanOfferBasic);
 
-            var maxSum = creditScore * loanApplication.getRequestAmount();
+            var maxSum = Math.round(creditScore * loanApplication.getRequestAmount());
 
             if (maxSum < maxLoanAmount) {
                 // Offer with additional amount based on requested period
@@ -106,9 +105,9 @@ public class LoanServiceImpl implements LoanService {
                         maxLoanAmount, loanApplication.getRequestPeriod(), maxLoanPeriod));
                 loanOffers.add(loanOfferMax);
             }
-
-            return getLoanResponse(true, loanOffers);
         }
+
+        return getLoanResponse(true, loanOffers);
     }
 
     // PRIVATE METHODS //
@@ -155,6 +154,7 @@ public class LoanServiceImpl implements LoanService {
 
     private LoanResponse getLoanResponse(boolean isPositive, Set<LoanOffer> loanOffers) {
         Set<LoanProposal> loanProposals = loanOffers.stream()
+                .sorted(Comparator.comparing(LoanOffer::getLoanAmount).reversed())
                 .map(this::convertLoanOfferToLoanProposal)
                 .collect(Collectors.toUnmodifiableSet());
 

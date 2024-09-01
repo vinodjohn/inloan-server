@@ -43,7 +43,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person findPersonsByPersonalIdCode(String personalIdCode) throws PersonNotFoundException {
+    public Person findPersonByPersonalIdCode(String personalIdCode) throws PersonNotFoundException {
         Optional<Person> person = personRepository.findByPersonalIdCode(personalIdCode);
 
         if (person.isEmpty()) {
