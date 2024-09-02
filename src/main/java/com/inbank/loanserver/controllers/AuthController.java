@@ -67,8 +67,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@Valid @RequestBody SignUp signUp) throws PersonNotFoundException,
-            RoleNotFoundException, CreditModifierNotFoundException {
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUp signUp) throws RoleNotFoundException,
+            CreditModifierNotFoundException {
         Person person = new Person();
         person.setFirstName(signUp.firstName());
         person.setLastName(signUp.lastName());
