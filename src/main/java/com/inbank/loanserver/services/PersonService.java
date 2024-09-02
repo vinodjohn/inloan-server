@@ -2,6 +2,7 @@ package com.inbank.loanserver.services;
 
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.PersonNotFoundException;
+import com.inbank.loanserver.exceptions.RoleNotFoundException;
 import com.inbank.loanserver.models.Person;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,7 @@ public interface PersonService {
      * @param person Person
      * @return Person
      */
-    Person createPerson(Person person) throws CreditModifierNotFoundException;
+    Person createPerson(Person person) throws CreditModifierNotFoundException, RoleNotFoundException;
 
     /**
      * To find a Person by ID

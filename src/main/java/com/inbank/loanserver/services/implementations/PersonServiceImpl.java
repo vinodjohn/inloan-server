@@ -2,14 +2,19 @@ package com.inbank.loanserver.services.implementations;
 
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.PersonNotFoundException;
+import com.inbank.loanserver.exceptions.RoleNotFoundException;
 import com.inbank.loanserver.models.CreditModifier;
 import com.inbank.loanserver.models.Person;
+import com.inbank.loanserver.models.Role;
+import com.inbank.loanserver.models.RoleType;
 import com.inbank.loanserver.repositories.PersonRepository;
 import com.inbank.loanserver.services.CreditModifierService;
 import com.inbank.loanserver.services.PersonService;
+import com.inbank.loanserver.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +36,25 @@ public class PersonServiceImpl implements PersonService {
     @Autowired
     private CreditModifierService creditModifierService;
 
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private RoleService roleService;
+
     @Override
-    public Person createPerson(Person person) throws CreditModifierNotFoundException {
+    public Person createPerson(Person person) throws CreditModifierNotFoundException, RoleNotFoundException {
         if (person.getCreditModifier() == null) {
             CreditModifier randomCreditModifier = creditModifierService.findRandomCreditModifier();
             person.setCreditModifier(randomCreditModifier);
         }
 
+        if (person.getRole() == null) {
+            Role role = roleService.findRoleByRoleType(RoleType.USER);
+            person.setRole(role);
+        }
+
+        person.setPassword(bCryptPasswordEncoder.encode(person.getPassword()));
         person.setActive(true);
         return personRepository.saveAndFlush(person);
     }
@@ -72,6 +89,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person updatePerson(Person person) throws PersonNotFoundException {
         if (findPersonById(person.getId()) != null) {
+            person.setPassword(bCryptPasswordEncoder.encode(person.getPassword()));
             return personRepository.saveAndFlush(person);
         }
 

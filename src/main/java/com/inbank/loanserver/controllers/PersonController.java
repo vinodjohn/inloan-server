@@ -3,6 +3,7 @@ package com.inbank.loanserver.controllers;
 import com.inbank.loanserver.dtos.ObjectListDto;
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.PersonNotFoundException;
+import com.inbank.loanserver.exceptions.RoleNotFoundException;
 import com.inbank.loanserver.models.Person;
 import com.inbank.loanserver.services.PersonService;
 import jakarta.validation.Valid;
@@ -53,7 +54,8 @@ public class PersonController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createPerson(@Valid @RequestBody Person person) throws CreditModifierNotFoundException {
+    public ResponseEntity<?> createPerson(@Valid @RequestBody Person person) throws CreditModifierNotFoundException,
+            RoleNotFoundException {
         Person newPerson = personService.createPerson(person);
         return new ResponseEntity<>(newPerson, HttpStatus.CREATED);
     }

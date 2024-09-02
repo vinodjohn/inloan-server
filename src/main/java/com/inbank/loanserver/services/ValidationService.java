@@ -8,6 +8,7 @@ import com.inbank.loanserver.exceptions.PersonNotFoundException;
 import com.inbank.loanserver.models.CreditModifier;
 import com.inbank.loanserver.models.KeyValueStore;
 import com.inbank.loanserver.models.Person;
+import com.inbank.loanserver.models.Role;
 
 /**
  * Service to validate different data
@@ -43,4 +44,11 @@ public interface ValidationService {
      * @param person Person object
      */
     void validatePerson(Person person) throws LoanValidationException, PersonNotFoundException, CreditModifierNotFoundException;
+
+    /**
+     * To validate role
+     *
+     * @param role Role object
+     */
+    void validateRole(Role role) throws LoanValidationException;
 }

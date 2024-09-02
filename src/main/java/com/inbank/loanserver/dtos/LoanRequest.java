@@ -9,5 +9,5 @@ import com.inbank.loanserver.utils.constraints.ValidLoanRequest;
  * @created 29.08.2024
  */
 @ValidLoanRequest
-public record LoanRequest(String personalIdCode, int loanAmount, int loanPeriod) {
+public record LoanRequest(int loanAmount, int loanPeriod) {
 }

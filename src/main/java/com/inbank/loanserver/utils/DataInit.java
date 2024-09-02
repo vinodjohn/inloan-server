@@ -1,12 +1,12 @@
 package com.inbank.loanserver.utils;
 
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
-import com.inbank.loanserver.models.CreditModifier;
-import com.inbank.loanserver.models.KeyValueStore;
-import com.inbank.loanserver.models.Person;
+import com.inbank.loanserver.exceptions.RoleNotFoundException;
+import com.inbank.loanserver.models.*;
 import com.inbank.loanserver.services.CreditModifierService;
 import com.inbank.loanserver.services.KeyValueStoreService;
 import com.inbank.loanserver.services.PersonService;
+import com.inbank.loanserver.services.RoleService;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,9 @@ public class DataInit {
     private KeyValueStoreService keyValueStoreService;
 
     @Autowired
+    private RoleService roleService;
+
+    @Autowired
     private PersonService personService;
 
     @PostConstruct
@@ -43,6 +46,7 @@ public class DataInit {
 
         initCreditModifier();
         initKeyValueStore();
+        initRole();
         initPerson();
 
         log.info("Data init finished");
@@ -106,17 +110,45 @@ public class DataInit {
         log.info("Data init key store finished");
     }
 
+    private void initRole() {
+        log.info("Data init role started");
+
+        Role role = new Role();
+        role.setRoleType(RoleType.ADMIN);
+        roleService.createRole(role);
+
+        role = new Role();
+        role.setRoleType(RoleType.USER);
+        roleService.createRole(role);
+
+        log.info("Data init role finished");
+    }
+
     private void initPerson() {
         log.info("Data init person started");
 
         try {
             Person person = new Person();
+            CreditModifier creditModifierSegment3 =
+                    creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_SEGMENT3);
+            Role roleAdmin = roleService.findRoleByRoleType(RoleType.ADMIN);
+            person.setFirstName("Falcon");
+            person.setLastName("Ameri");
+            person.setPersonalIdCode("39403160272");
+            person.setPassword("123456");
+            person.setCreditModifier(creditModifierSegment3);
+            person.setRole(roleAdmin);
+            personService.createPerson(person);
+
+            person = new Person();
             CreditModifier creditModifierDebt = creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_DEBT);
+            Role roleUser = roleService.findRoleByRoleType(RoleType.USER);
             person.setFirstName("Thor");
             person.setLastName("Thunder");
             person.setPersonalIdCode("49002010965");
             person.setPassword("123456");
             person.setCreditModifier(creditModifierDebt);
+            person.setRole(roleUser);
             personService.createPerson(person);
 
             person = new Person();
@@ -127,6 +159,7 @@ public class DataInit {
             person.setPersonalIdCode("49002010976");
             person.setPassword("123456");
             person.setCreditModifier(creditModifierSegment1);
+            person.setRole(roleUser);
             personService.createPerson(person);
 
             person = new Person();
@@ -137,20 +170,20 @@ public class DataInit {
             person.setPersonalIdCode("49002010987");
             person.setPassword("123456");
             person.setCreditModifier(creditModifierSegment2);
+            person.setRole(roleUser);
             personService.createPerson(person);
 
             person = new Person();
-            CreditModifier creditModifierSegment3 =
-                    creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_SEGMENT2);
             person.setFirstName("Bruce");
             person.setLastName("Banner");
             person.setPersonalIdCode("49002010998");
             person.setPassword("123456");
             person.setCreditModifier(creditModifierSegment3);
+            person.setRole(roleUser);
             personService.createPerson(person);
 
             log.info("Data init person finished");
-        } catch (CreditModifierNotFoundException e) {
+        } catch (CreditModifierNotFoundException | RoleNotFoundException e) {
             log.error("Error Person Data Init!");
             log.info(e.getLocalizedMessage());
         }

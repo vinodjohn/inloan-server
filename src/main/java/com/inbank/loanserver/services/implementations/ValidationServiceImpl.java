@@ -1,17 +1,12 @@
 package com.inbank.loanserver.services.implementations;
 
 import com.inbank.loanserver.dtos.LoanRequest;
-import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
-import com.inbank.loanserver.exceptions.KeyValueStoreNotFoundException;
-import com.inbank.loanserver.exceptions.LoanValidationException;
-import com.inbank.loanserver.exceptions.PersonNotFoundException;
+import com.inbank.loanserver.exceptions.*;
 import com.inbank.loanserver.models.CreditModifier;
 import com.inbank.loanserver.models.KeyValueStore;
 import com.inbank.loanserver.models.Person;
-import com.inbank.loanserver.services.CreditModifierService;
-import com.inbank.loanserver.services.KeyValueStoreService;
-import com.inbank.loanserver.services.PersonService;
-import com.inbank.loanserver.services.ValidationService;
+import com.inbank.loanserver.models.Role;
+import com.inbank.loanserver.services.*;
 import com.inbank.loanserver.utils.LoanUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +31,9 @@ public class ValidationServiceImpl implements ValidationService {
 
     @Autowired
     private PersonService personService;
+
+    @Autowired
+    private RoleService roleService;
 
     @Override
     public void validateCreditModifier(CreditModifier creditModifier) throws LoanValidationException {
@@ -129,6 +127,31 @@ public class ValidationServiceImpl implements ValidationService {
                 throw new LoanValidationException(getExceptionMessage(Person.class, "credit modifier",
                         false));
             }
+        }
+
+        if (person.getRole() != null) {
+            try {
+                roleService.findRoleById(person.getRole().getId());
+            } catch (RoleNotFoundException e) {
+                throw new LoanValidationException(getExceptionMessage(Person.class, "role",
+                        false));
+            }
+        }
+    }
+
+    @Override
+    public void validateRole(Role role) throws LoanValidationException {
+        if (role.getRoleType() == null) {
+            throw new LoanValidationException(getExceptionMessage(Role.class, "Role type",
+                    false));
+        }
+
+        try {
+            roleService.findRoleByRoleType(role.getRoleType());
+            throw new LoanValidationException(getExceptionMessage(KeyValueStore.class, "Role type",
+                    true));
+        } catch (RoleNotFoundException e) {
+            log.info("Role with Role Type {} not found", role.getRoleType());
         }
     }
 

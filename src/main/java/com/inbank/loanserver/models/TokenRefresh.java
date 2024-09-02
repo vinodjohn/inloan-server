@@ -1,42 +1,36 @@
 package com.inbank.loanserver.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.inbank.loanserver.utils.constraints.ValidPerson;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.Instant;
 import java.util.UUID;
 
 /**
- * Person model
+ * Refresh token model
  *
  * @author vinodjohn
- * @created 29.08.2024
+ * @created 02.09.2024
  */
 @Data
 @Entity
-@ValidPerson
 @EqualsAndHashCode(callSuper = true)
-public final class Person extends Auditable<String> {
+public final class TokenRefresh extends Auditable<String> {
     @Id
     @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    private String firstName;
-    private String lastName;
-
     @Column(nullable = false, unique = true)
-    private String personalIdCode;
+    private String token;
 
-    private String password;
+    @Column(nullable = false)
+    private Instant endTime;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private Role role;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    private CreditModifier creditModifier;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Person person;
 
     @JsonProperty("isActive")
     private boolean isActive;
