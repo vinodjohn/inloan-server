@@ -1,6 +1,5 @@
 package com.inbank.loanserver.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.inbank.loanserver.utils.constraints.ValidPerson;
 import jakarta.persistence.*;
@@ -33,7 +32,7 @@ public final class Person extends Auditable<String> {
 
     private String password;
 
-    @JsonIgnore
+
     @ManyToOne(fetch = FetchType.EAGER)
     private CreditModifier creditModifier;
 

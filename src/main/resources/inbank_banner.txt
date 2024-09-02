@@ -6,6 +6,5 @@
  +-+ +-+ +-+ +-+ +-+   +-+ +-+ +-+ +-+
  |S| |m| |a| |r| |t|   |L| |o| |a| |n|
  +-+ +-+ +-+ +-+ +-+   +-+ +-+ +-+ +-+
-
-${application.title} ${application.version}
 Powered by Spring Boot ${spring-boot.version}
+

@@ -57,14 +57,17 @@ public class DataInit {
         creditModifier.setValue(0);
         creditModifierService.createCreditModifier(creditModifier);
 
+        creditModifier = new CreditModifier();
         creditModifier.setName(CREDIT_MODIFIER_SEGMENT1);
         creditModifier.setValue(100);
         creditModifierService.createCreditModifier(creditModifier);
 
+        creditModifier = new CreditModifier();
         creditModifier.setName(CREDIT_MODIFIER_SEGMENT2);
         creditModifier.setValue(300);
         creditModifierService.createCreditModifier(creditModifier);
 
+        creditModifier = new CreditModifier();
         creditModifier.setName(CREDIT_MODIFIER_SEGMENT3);
         creditModifier.setValue(1000);
         creditModifierService.createCreditModifier(creditModifier);
@@ -80,18 +83,22 @@ public class DataInit {
         keyValueStore.setValue(2000);
         keyValueStoreService.createKeyValueStore(keyValueStore);
 
+        keyValueStore = new KeyValueStore();
         keyValueStore.setKey(MAXIMUM_LOAN_AMOUNT);
         keyValueStore.setValue(10000);
         keyValueStoreService.createKeyValueStore(keyValueStore);
 
+        keyValueStore = new KeyValueStore();
         keyValueStore.setKey(MINIMUM_LOAN_PERIOD);
         keyValueStore.setValue(12);
         keyValueStoreService.createKeyValueStore(keyValueStore);
 
+        keyValueStore = new KeyValueStore();
         keyValueStore.setKey(MAXIMUM_LOAN_PERIOD);
         keyValueStore.setValue(60);
         keyValueStoreService.createKeyValueStore(keyValueStore);
 
+        keyValueStore = new KeyValueStore();
         keyValueStore.setKey(CREDIT_COEFFICIENT);
         keyValueStore.setValue(1);
         keyValueStoreService.createKeyValueStore(keyValueStore);
@@ -112,6 +119,7 @@ public class DataInit {
             person.setCreditModifier(creditModifierDebt);
             personService.createPerson(person);
 
+            person = new Person();
             CreditModifier creditModifierSegment1 =
                     creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_SEGMENT1);
             person.setFirstName("Tony");
@@ -121,6 +129,7 @@ public class DataInit {
             person.setCreditModifier(creditModifierSegment1);
             personService.createPerson(person);
 
+            person = new Person();
             CreditModifier creditModifierSegment2 =
                     creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_SEGMENT2);
             person.setFirstName("Natasha");
@@ -130,6 +139,7 @@ public class DataInit {
             person.setCreditModifier(creditModifierSegment2);
             personService.createPerson(person);
 
+            person = new Person();
             CreditModifier creditModifierSegment3 =
                     creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_SEGMENT2);
             person.setFirstName("Bruce");

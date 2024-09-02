@@ -15,10 +15,10 @@ public class PersonNotFoundException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public PersonNotFoundException(UUID id) {
-        super(MessageFormat.format("Person not found! (ID: {0}", id));
+        super(MessageFormat.format("Person not found! (ID: {0})", id));
     }
 
     public PersonNotFoundException(String personalIdCode) {
-        super(MessageFormat.format("Person not found! (Personal Id Code: {0}", personalIdCode));
+        super(MessageFormat.format("Person not found! (Personal ID Code: {0})", personalIdCode));
     }
 }

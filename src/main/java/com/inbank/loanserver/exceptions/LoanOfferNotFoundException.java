@@ -15,11 +15,11 @@ public class LoanOfferNotFoundException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public LoanOfferNotFoundException(UUID id) {
-        super(MessageFormat.format("Loan Offer not found! (ID: {0}", id));
+        super(MessageFormat.format("Loan Offer not found! (ID: {0})", id));
     }
 
     public LoanOfferNotFoundException(String personName, UUID loanApplicationId) {
-        super(MessageFormat.format("Loan Offer not found! (Person: {0}, Loan application ID: {1} ",
+        super(MessageFormat.format("Loan Offer not found! (Person: {0}, Loan application ID: {1})",
                 personName, loanApplicationId));
     }
 }

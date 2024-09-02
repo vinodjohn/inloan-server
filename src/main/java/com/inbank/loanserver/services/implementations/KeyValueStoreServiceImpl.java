@@ -32,7 +32,7 @@ public class KeyValueStoreServiceImpl implements KeyValueStoreService {
         String key = keyValueStore.getKey().trim().toUpperCase();
         keyValueStore.setKey(key);
         keyValueStore.setActive(true);
-        return keyValueStoreRepository.save(keyValueStore);
+        return keyValueStoreRepository.saveAndFlush(keyValueStore);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class KeyValueStoreServiceImpl implements KeyValueStoreService {
 
     @Override
     public KeyValueStore findKeyValueStoreByKey(String key) throws KeyValueStoreNotFoundException {
-        Optional<KeyValueStore> optionalKeyValueStore = keyValueStoreRepository.findByKey(key);
+        Optional<KeyValueStore> optionalKeyValueStore = keyValueStoreRepository.findByKey(key.toUpperCase());
 
         if (optionalKeyValueStore.isEmpty()) {
             throw new KeyValueStoreNotFoundException(key);
@@ -65,7 +65,7 @@ public class KeyValueStoreServiceImpl implements KeyValueStoreService {
     @Override
     public KeyValueStore updateKeyValueStore(KeyValueStore keyValueStore) throws KeyValueStoreNotFoundException {
         if (findKeyValueStoreById(keyValueStore.getId()) != null) {
-            return keyValueStoreRepository.save(keyValueStore);
+            return keyValueStoreRepository.saveAndFlush(keyValueStore);
         }
 
         return null;
@@ -75,14 +75,14 @@ public class KeyValueStoreServiceImpl implements KeyValueStoreService {
     public void deleteKeyValueStoreById(UUID id) throws KeyValueStoreNotFoundException {
         KeyValueStore keyValueStore = findKeyValueStoreById(id);
         keyValueStore.setActive(false);
-        keyValueStoreRepository.save(keyValueStore);
+        keyValueStoreRepository.saveAndFlush(keyValueStore);
     }
 
     @Override
     public void restoreKeyValueStoreById(UUID id) throws KeyValueStoreNotFoundException {
         KeyValueStore keyValueStore = findKeyValueStoreById(id);
         keyValueStore.setActive(true);
-        keyValueStoreRepository.save(keyValueStore);
+        keyValueStoreRepository.saveAndFlush(keyValueStore);
     }
 
     @Override

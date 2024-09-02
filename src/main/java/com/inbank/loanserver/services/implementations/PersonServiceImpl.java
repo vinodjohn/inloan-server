@@ -39,7 +39,7 @@ public class PersonServiceImpl implements PersonService {
         }
 
         person.setActive(true);
-        return personRepository.save(person);
+        return personRepository.saveAndFlush(person);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person updatePerson(Person person) throws PersonNotFoundException {
         if (findPersonById(person.getId()) != null) {
-            return personRepository.save(person);
+            return personRepository.saveAndFlush(person);
         }
 
         return null;
@@ -82,13 +82,13 @@ public class PersonServiceImpl implements PersonService {
     public void deletePersonById(UUID id) throws PersonNotFoundException {
         Person person = findPersonById(id);
         person.setActive(false);
-        personRepository.save(person);
+        personRepository.saveAndFlush(person);
     }
 
     @Override
     public void restorePersonById(UUID id) throws PersonNotFoundException {
         Person person = findPersonById(id);
         person.setActive(true);
-        personRepository.save(person);
+        personRepository.saveAndFlush(person);
     }
 }

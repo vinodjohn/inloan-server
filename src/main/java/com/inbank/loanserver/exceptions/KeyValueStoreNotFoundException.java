@@ -15,10 +15,10 @@ public class KeyValueStoreNotFoundException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public KeyValueStoreNotFoundException(UUID id) {
-        super(MessageFormat.format("KeyValue not found! (ID: {0}", id));
+        super(MessageFormat.format("KeyValue not found! (ID: {0})", id));
     }
 
     public KeyValueStoreNotFoundException(String key) {
-        super(MessageFormat.format("KeyValue not found! (Key: {0}", key));
+        super(MessageFormat.format("KeyValue not found! (Key: {0})", key));
     }
 }

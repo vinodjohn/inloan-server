@@ -30,7 +30,7 @@ public class CreditModifierServiceImpl implements CreditModifierService {
         String name = creditModifier.getName().trim().toUpperCase();
         creditModifier.setName(name);
         creditModifier.setActive(true);
-        return creditModifierRepository.save(creditModifier);
+        return creditModifierRepository.saveAndFlush(creditModifier);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class CreditModifierServiceImpl implements CreditModifierService {
 
     @Override
     public CreditModifier findCreditModifierByName(String name) throws CreditModifierNotFoundException {
-        Optional<CreditModifier> optionalCreditModifier = creditModifierRepository.findByName(name);
+        Optional<CreditModifier> optionalCreditModifier = creditModifierRepository.findByName(name.toUpperCase());
 
         if (optionalCreditModifier.isEmpty()) {
             throw new CreditModifierNotFoundException(name);
@@ -74,7 +74,9 @@ public class CreditModifierServiceImpl implements CreditModifierService {
     @Override
     public CreditModifier updateCreditModifier(CreditModifier creditModifier) throws CreditModifierNotFoundException {
         if (findCreditModifierById(creditModifier.getId()) != null) {
-            return creditModifierRepository.save(creditModifier);
+            String name = creditModifier.getName().trim().toUpperCase();
+            creditModifier.setName(name);
+            return creditModifierRepository.saveAndFlush(creditModifier);
         }
 
         return null;
@@ -84,13 +86,13 @@ public class CreditModifierServiceImpl implements CreditModifierService {
     public void deleteCreditModifierById(UUID id) throws CreditModifierNotFoundException {
         CreditModifier creditModifier = findCreditModifierById(id);
         creditModifier.setActive(false);
-        creditModifierRepository.save(creditModifier);
+        creditModifierRepository.saveAndFlush(creditModifier);
     }
 
     @Override
     public void restoreCreditModifierById(UUID id) throws CreditModifierNotFoundException {
         CreditModifier creditModifier = findCreditModifierById(id);
         creditModifier.setActive(true);
-        creditModifierRepository.save(creditModifier);
+        creditModifierRepository.saveAndFlush(creditModifier);
     }
 }

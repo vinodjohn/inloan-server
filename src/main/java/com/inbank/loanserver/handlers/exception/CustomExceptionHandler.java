@@ -86,8 +86,8 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // PRIVATE METHODS //
-    private ErrorResponse getErrorResponse(String description, Object object) {
-        String className = LoanUtils.getStringOfClassName(object);
+    private ErrorResponse getErrorResponse(String description, Class<?> clazz) {
+        String className = LoanUtils.getStringOfClassName(clazz);
         List<String> details = new ArrayList<>();
         details.add(description);
 

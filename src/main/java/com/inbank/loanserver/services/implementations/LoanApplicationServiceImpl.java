@@ -29,7 +29,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     @Override
     public LoanApplication createLoanApplication(LoanApplication loanApplication) {
         loanApplication.setActive(true);
-        return loanApplicationRepository.save(loanApplication);
+        return loanApplicationRepository.saveAndFlush(loanApplication);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     @Override
     public LoanApplication updateLoanApplication(LoanApplication loanApplication) throws LoanApplicationNotFoundException {
         if (findLoanApplicationById(loanApplication.getId()) != null) {
-           return loanApplicationRepository.save(loanApplication);
+           return loanApplicationRepository.saveAndFlush(loanApplication);
         }
 
         return null;
@@ -66,13 +66,13 @@ public class LoanApplicationServiceImpl implements LoanApplicationService {
     public void deleteLoanApplicationById(UUID id) throws LoanApplicationNotFoundException {
         LoanApplication loanApplication = findLoanApplicationById(id);
         loanApplication.setActive(false);
-        loanApplicationRepository.save(loanApplication);
+        loanApplicationRepository.saveAndFlush(loanApplication);
     }
 
     @Override
     public void restoreLoanApplicationById(UUID id) throws LoanApplicationNotFoundException {
         LoanApplication loanApplication = findLoanApplicationById(id);
         loanApplication.setActive(true);
-        loanApplicationRepository.save(loanApplication);
+        loanApplicationRepository.saveAndFlush(loanApplication);
     }
 }
