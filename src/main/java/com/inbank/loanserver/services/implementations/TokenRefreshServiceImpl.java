@@ -87,7 +87,7 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
     }
 
     @Override
-    public TokenRefresh deleteTokenRefreshByPersonId(UUID personId) {
+    public void deleteTokenRefreshByPersonId(UUID personId) {
         Optional<TokenRefresh> tokenRefresh = tokenRefreshRepository.findLatestActiveTokenByPerson(personId);
 
         if (tokenRefresh.isEmpty()) {
@@ -95,6 +95,8 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
                     personId));
         }
 
-        return tokenRefresh.get();
+        TokenRefresh tokenRefreshToDelete = tokenRefresh.get();
+        tokenRefreshToDelete.setActive(false);
+        tokenRefreshRepository.saveAndFlush(tokenRefreshToDelete);
     }
 }

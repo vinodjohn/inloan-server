@@ -59,6 +59,6 @@ public interface TokenRefreshService {
      * @param personId Person's ID
      * @return TokenRefresh obj
      */
-    TokenRefresh deleteTokenRefreshByPersonId(UUID personId);
+    void deleteTokenRefreshByPersonId(UUID personId);
 
 }

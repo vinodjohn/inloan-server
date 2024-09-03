@@ -94,7 +94,7 @@ public class AuthController {
         CustomUserDetails customUserDetails =
                 (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID personId = customUserDetails.getPerson().getId();
-        TokenRefresh _ = tokenRefreshService.deleteTokenRefreshByPersonId(personId);
+        tokenRefreshService.deleteTokenRefreshByPersonId(personId);
         return ResponseEntity.ok().build();
     }
 }
