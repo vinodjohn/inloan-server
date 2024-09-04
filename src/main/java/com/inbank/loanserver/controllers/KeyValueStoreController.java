@@ -1,5 +1,6 @@
 package com.inbank.loanserver.controllers;
 
+import com.inbank.loanserver.dtos.KeyValueStoreDto;
 import com.inbank.loanserver.dtos.ObjectListDto;
 import com.inbank.loanserver.exceptions.KeyValueStoreNotFoundException;
 import com.inbank.loanserver.models.KeyValueStore;
@@ -46,6 +47,17 @@ public class KeyValueStoreController {
         return ResponseEntity.ok(objectListDto);
     }
 
+    @GetMapping("/new-loan")
+    public ResponseEntity<?> getSortedKeyValueStoreForNewLoan() throws KeyValueStoreNotFoundException {
+        List<KeyValueStoreDto> keyValueStoreList =
+                List.of(convertToKeyValueDto(keyValueStoreService.getMinimumLoanAmount()),
+                        convertToKeyValueDto(keyValueStoreService.getMaximumLoanAmount()),
+                        convertToKeyValueDto(keyValueStoreService.getMinimumLoanPeriod()),
+                        convertToKeyValueDto(keyValueStoreService.getMaximumLoanPeriod()));
+
+        return ResponseEntity.ok(keyValueStoreList);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getKeyValueStoreById(@PathVariable UUID id) throws KeyValueStoreNotFoundException {
         KeyValueStore keyValueStore = keyValueStoreService.findKeyValueStoreById(id);
@@ -74,5 +86,10 @@ public class KeyValueStoreController {
     public ResponseEntity<?> restoreKeyValueStore(@PathVariable UUID id) throws KeyValueStoreNotFoundException {
         keyValueStoreService.restoreKeyValueStoreById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // PRIVATE METHODS //
+    KeyValueStoreDto convertToKeyValueDto(KeyValueStore keyValueStore) {
+        return new KeyValueStoreDto(keyValueStore.getKey(), keyValueStore.getValue());
     }
 }

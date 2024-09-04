@@ -9,15 +9,11 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.util.List;
 
 /**
  * Configuration for Security
@@ -27,7 +23,7 @@ import java.util.List;
  */
 
 @Configuration
-@EnableWebSecurity
+//@EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfiguration {
     @Autowired
@@ -62,7 +58,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
@@ -73,22 +69,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/person/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/kv-store/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .cors(corsCustomizer -> corsCustomizer
-                        .configurationSource(_ -> {
-                            var corsConfig = new CorsConfiguration();
-                            corsConfig.setAllowedOrigins(List.of("http://localhost:4200"));
-                            corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                            corsConfig.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-                            corsConfig.setAllowCredentials(true);
-
-                            return corsConfig;
-                        })
-                );
-
-        http.authenticationProvider(authenticationProvider());
-        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 }

@@ -1,7 +1,9 @@
 package com.inbank.loanserver.controllers;
 
 import com.inbank.loanserver.configurations.security.CustomUserDetails;
-import com.inbank.loanserver.dtos.*;
+import com.inbank.loanserver.dtos.PersonDto;
+import com.inbank.loanserver.dtos.SignIn;
+import com.inbank.loanserver.dtos.SignUp;
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.PersonNotFoundException;
 import com.inbank.loanserver.exceptions.RoleNotFoundException;
@@ -10,19 +12,20 @@ import com.inbank.loanserver.models.TokenRefresh;
 import com.inbank.loanserver.services.PersonService;
 import com.inbank.loanserver.services.TokenRefreshService;
 import com.inbank.loanserver.utils.SecurityUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.text.MessageFormat;
 import java.util.UUID;
 
 /**
@@ -50,23 +53,30 @@ public class AuthController {
     public ResponseEntity<?> signIn(@Valid @RequestBody SignIn signIn) throws PersonNotFoundException {
         Authentication authentication = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(signIn.personalIdCode(), signIn.password()));
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        String jwt = securityUtils.generateJwtToken(customUserDetails);
+        ResponseCookie generatedJwtCookie = securityUtils.generateJwtCookie(customUserDetails.getUsername());
+        TokenRefresh tokenRefresh = tokenRefreshService.createRefreshToken(customUserDetails.getPerson().getId());
+        ResponseCookie refreshJwtCookie = securityUtils.generateRefreshJwtCookie(tokenRefresh.getToken());
 
         String role = customUserDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("No authorities found for person"));
 
-        TokenRefresh tokenRefresh = tokenRefreshService.createRefreshToken(customUserDetails.getPerson().getId());
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.SET_COOKIE, generatedJwtCookie.getValue());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, refreshJwtCookie.getValue());
 
-        return ResponseEntity.ok(new TokenResponse(customUserDetails.getPerson().getId(),
-                customUserDetails.getUsername(), role, jwt, tokenRefresh.getToken(), null));
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .body(new PersonDto(customUserDetails.getPerson().getId(),
+                        customUserDetails.getPerson().getPersonalIdCode(),
+                        MessageFormat.format("{0} {1}", customUserDetails.getPerson().getFirstName(),
+                                customUserDetails.getPerson().getLastName()), role));
     }
 
-    @PostMapping("/signup")
+    @PostMapping("/sign-up")
     public ResponseEntity<?> signUp(@Valid @RequestBody SignUp signUp) throws RoleNotFoundException,
             CreditModifierNotFoundException {
         Person person = new Person();
@@ -81,12 +91,20 @@ public class AuthController {
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@Valid @RequestBody TokenRefreshRequest tokenRefreshRequest) {
-        TokenRefresh tokenRefresh = tokenRefreshService.findTokenRefreshByToken(tokenRefreshRequest.refreshToken());
-        TokenRefresh tokenRefreshVerified = tokenRefreshService.verifyTokenExpiry(tokenRefresh);
-        String token = securityUtils.generateTokenFromUsername(tokenRefreshVerified.getPerson().getPersonalIdCode());
+    public ResponseEntity<?> refreshToken(HttpServletRequest httpServletRequest) {
+        String tokenRefreshRetrieved = securityUtils.getJwtRefreshFromCookies(httpServletRequest);
 
-        return ResponseEntity.ok(new TokenRefreshResponse(token, tokenRefreshRequest.refreshToken(), null));
+        if (tokenRefreshRetrieved != null && !tokenRefreshRetrieved.isBlank()) {
+            TokenRefresh tokenRefresh = tokenRefreshService.findTokenRefreshByToken(tokenRefreshRetrieved);
+            TokenRefresh tokenRefreshVerified = tokenRefreshService.verifyTokenExpiry(tokenRefresh);
+            ResponseCookie refreshJwtCookie =
+                    securityUtils.generateJwtCookie(tokenRefreshVerified.getPerson().getPersonalIdCode());
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.SET_COOKIE, refreshJwtCookie.getValue())
+                    .build();
+        }
+
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("/sign-out")
@@ -95,6 +113,13 @@ public class AuthController {
                 (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UUID personId = customUserDetails.getPerson().getId();
         tokenRefreshService.deleteTokenRefreshByPersonId(personId);
-        return ResponseEntity.ok().build();
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.SET_COOKIE, securityUtils.getCleanJwtCookie().getValue());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, securityUtils.getCleanJwtRefreshCookie().getValue());
+
+        return ResponseEntity.ok()
+                .headers(httpHeaders)
+                .build();
     }
 }
