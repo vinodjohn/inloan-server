@@ -1,7 +1,6 @@
 package com.inbank.loanserver.services;
 
 import com.inbank.loanserver.exceptions.LoanContractNotFoundException;
-import com.inbank.loanserver.models.LoanApplication;
 import com.inbank.loanserver.models.LoanContract;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

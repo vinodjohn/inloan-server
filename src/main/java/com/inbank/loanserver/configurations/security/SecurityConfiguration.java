@@ -1,6 +1,5 @@
 package com.inbank.loanserver.configurations.security;
 
-import com.inbank.loanserver.models.RoleType;
 import com.inbank.loanserver.services.implementations.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
