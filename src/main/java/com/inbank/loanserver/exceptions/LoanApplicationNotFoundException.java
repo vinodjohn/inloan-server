@@ -17,8 +17,4 @@ public class LoanApplicationNotFoundException extends Exception {
     public LoanApplicationNotFoundException(UUID id) {
         super(MessageFormat.format("Loan Application not found! (ID: {0})", id));
     }
-
-    public LoanApplicationNotFoundException(String personName) {
-        super(MessageFormat.format("Loan Application not found! (Person: {0})", personName));
-    }
 }

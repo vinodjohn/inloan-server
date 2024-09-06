@@ -17,9 +17,4 @@ public class LoanContractNotFoundException extends Exception {
     public LoanContractNotFoundException(UUID id) {
         super(MessageFormat.format("Loan Contract not found! (ID: {0})", id));
     }
-
-    public LoanContractNotFoundException(String personName, UUID loanApplicationId) {
-        super(MessageFormat.format("Loan Contract not found! (Person: {0}, Loan application ID: {1})",
-                personName, loanApplicationId));
-    }
 }
