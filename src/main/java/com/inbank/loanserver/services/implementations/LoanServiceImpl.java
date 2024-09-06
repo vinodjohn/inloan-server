@@ -14,7 +14,10 @@ import com.inbank.loanserver.services.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -85,11 +88,15 @@ public class LoanServiceImpl implements LoanService {
                 loanOfferType = LoanOfferType.MAX;
             }
 
-            LoanOffer loanOfferAdv = loanOfferService.createLoanOffer(getAdvancedLoanOffer(loanApplication,
+            LoanOffer loanOfferAdv = getAdvancedLoanOffer(loanApplication,
                     creditScore, creditCoefficient, minLoanAmount, maxLoanAmount, minLoanPeriod, maxLoanPeriod,
-                    loanOfferType));
-            loanOffers.add(loanOfferAdv);
+                    loanOfferType);
 
+            if (loanOfferAdv.getLoanAmount() != loanApplication.getRequestAmount()
+                    && loanOfferAdv.getMinPeriod() != potentialPeriod && loanOfferAdv.getMaxPeriod() != maxLoanPeriod) {
+                loanOfferAdv = loanOfferService.createLoanOffer(loanOfferAdv);
+                loanOffers.add(loanOfferAdv);
+            }
         } else {
             // Offer with requested amount and requested period
             LoanOffer loanOfferBasic = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,
@@ -106,10 +113,16 @@ public class LoanServiceImpl implements LoanService {
                 loanOffers.add(loanOfferPlus);
 
                 // Offer with maximum amount based on credit modifier and credit coefficient with suitable period
-                LoanOffer loanOfferAdv = loanOfferService.createLoanOffer(getAdvancedLoanOffer(loanApplication,
+                LoanOffer loanOfferAdv = getAdvancedLoanOffer(loanApplication,
                         creditScore, creditCoefficient, maxSum, maxLoanAmount, loanApplication.getRequestPeriod(),
-                        maxLoanPeriod, LoanOfferType.MAX));
-                loanOffers.add(loanOfferAdv);
+                        maxLoanPeriod, LoanOfferType.MAX);
+
+                if (loanOfferAdv.getLoanAmount() != maxSum
+                        && loanOfferAdv.getMinPeriod() != loanApplication.getRequestPeriod()
+                        && loanOfferAdv.getMaxPeriod() != maxLoanPeriod) {
+                    loanOfferAdv = loanOfferService.createLoanOffer(loanOfferAdv);
+                    loanOffers.add(loanOfferAdv);
+                }
             } else {
                 // Offer with maximum amount with maximum period
                 LoanOffer loanOfferMax = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,

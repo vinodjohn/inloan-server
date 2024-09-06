@@ -71,6 +71,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/kv-store/**").permitAll()
                         .requestMatchers("/loan/**").permitAll()
+                        .requestMatchers("/loan-contract/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
