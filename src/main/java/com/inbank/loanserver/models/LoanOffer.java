@@ -33,6 +33,9 @@ public final class LoanOffer extends Auditable<String> {
     @Enumerated(EnumType.STRING)
     private LoanOfferStatus loanOfferStatus;
 
+    @Enumerated(EnumType.STRING)
+    private LoanOfferType loanOfferType;
+
     @JsonProperty("isActive")
     private boolean isActive;
 }

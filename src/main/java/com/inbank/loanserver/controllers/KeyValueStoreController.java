@@ -44,6 +44,7 @@ public class KeyValueStoreController {
                 .collect(Collectors.toList());
         ObjectListDto objectListDto = new ObjectListDto(keyValueStoreList, pageNum,
                 keyValueStorePage.getTotalElements());
+
         return ResponseEntity.ok(objectListDto);
     }
 
@@ -53,7 +54,8 @@ public class KeyValueStoreController {
                 List.of(convertToKeyValueDto(keyValueStoreService.getMinimumLoanAmount()),
                         convertToKeyValueDto(keyValueStoreService.getMaximumLoanAmount()),
                         convertToKeyValueDto(keyValueStoreService.getMinimumLoanPeriod()),
-                        convertToKeyValueDto(keyValueStoreService.getMaximumLoanPeriod()));
+                        convertToKeyValueDto(keyValueStoreService.getMaximumLoanPeriod()),
+                        convertToKeyValueDto(keyValueStoreService.findKeyValueStoreByKey("BASE_INTEREST_RATE")));
 
         return ResponseEntity.ok(keyValueStoreList);
     }

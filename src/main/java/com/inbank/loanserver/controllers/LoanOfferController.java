@@ -19,7 +19,7 @@ import static com.inbank.loanserver.utils.Constants.Data.DEFAULT_ITEMS_PER_PAGE;
 import static com.inbank.loanserver.utils.LoanUtils.getSortOfColumn;
 
 /**
- * Controller to handle loan application related operations
+ * Controller to handle loan offer related operations
  *
  * @author vinodjohn
  * @created 01.09.2024
@@ -42,6 +42,7 @@ public class LoanOfferController {
                 .collect(Collectors.toList());
         ObjectListDto objectListDto = new ObjectListDto(loanOfferList, pageNum,
                 loanOfferPage.getTotalElements());
+
         return ResponseEntity.ok(objectListDto);
     }
 

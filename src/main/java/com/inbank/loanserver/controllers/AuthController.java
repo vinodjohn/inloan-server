@@ -65,8 +65,8 @@ public class AuthController {
                 .orElseThrow(() -> new IllegalStateException("No authorities found for person"));
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.SET_COOKIE, generatedJwtCookie.getValue());
-        httpHeaders.add(HttpHeaders.SET_COOKIE, refreshJwtCookie.getValue());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, generatedJwtCookie.toString());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, refreshJwtCookie.toString());
 
         return ResponseEntity.ok()
                 .headers(httpHeaders)
@@ -115,8 +115,8 @@ public class AuthController {
         tokenRefreshService.deleteTokenRefreshByPersonId(personId);
 
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.add(HttpHeaders.SET_COOKIE, securityUtils.getCleanJwtCookie().getValue());
-        httpHeaders.add(HttpHeaders.SET_COOKIE, securityUtils.getCleanJwtRefreshCookie().getValue());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, securityUtils.getCleanJwtCookie().toString());
+        httpHeaders.add(HttpHeaders.SET_COOKIE, securityUtils.getCleanJwtRefreshCookie().toString());
 
         return ResponseEntity.ok()
                 .headers(httpHeaders)

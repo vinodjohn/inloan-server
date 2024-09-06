@@ -1,5 +1,6 @@
 package com.inbank.loanserver.configurations.security;
 
+import com.inbank.loanserver.models.RoleType;
 import com.inbank.loanserver.services.implementations.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -58,7 +59,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+        http
                 .csrf(AbstractHttpConfigurer::disable)
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
@@ -70,10 +71,12 @@ public class SecurityConfiguration {
                         .requestMatchers("/person/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/kv-store/**").permitAll()
+                        .requestMatchers("/loan/**").permitAll()
                         .anyRequest().authenticated()
-                )
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-                .build();
+                );
+
+        http.authenticationProvider(authenticationProvider());
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        return http.build();
     }
 }

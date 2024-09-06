@@ -5,33 +5,32 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.time.Instant;
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
- * Refresh token model
+ * Loan Contract model
  *
  * @author vinodjohn
- * @created 02.09.2024
+ * @created 05.09.2024
  */
 @Data
 @Entity
 @EqualsAndHashCode(callSuper = true)
-public final class TokenRefresh extends Auditable<String> {
+public final class LoanContract extends Auditable<String> {
     @Id
     @Column(updatable = false, nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column(nullable = false, unique = true)
-    private String token;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private LoanOffer loanOffer;
 
-    @Column(nullable = false)
-    private LocalDateTime endTime;
+    private float interestRate;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private Person person;
+    private int period;
+
+    private BigDecimal monthlyAmount;
 
     @JsonProperty("isActive")
     private boolean isActive;

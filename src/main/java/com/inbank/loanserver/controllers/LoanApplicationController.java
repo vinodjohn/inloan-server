@@ -43,6 +43,7 @@ public class LoanApplicationController {
                 .collect(Collectors.toList());
         ObjectListDto objectListDto = new ObjectListDto(loanApplicationList, pageNum,
                 loanApplicationPage.getTotalElements());
+
         return ResponseEntity.ok(objectListDto);
     }
 

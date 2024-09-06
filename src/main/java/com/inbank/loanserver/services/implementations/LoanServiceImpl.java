@@ -1,22 +1,20 @@
 package com.inbank.loanserver.services.implementations;
 
 import com.inbank.loanserver.dtos.LoanDecisionStatus;
-import com.inbank.loanserver.dtos.LoanProposal;
+import com.inbank.loanserver.dtos.LoanOfferDto;
 import com.inbank.loanserver.dtos.LoanResponse;
 import com.inbank.loanserver.exceptions.KeyValueStoreNotFoundException;
 import com.inbank.loanserver.models.LoanApplication;
 import com.inbank.loanserver.models.LoanOffer;
 import com.inbank.loanserver.models.LoanOfferStatus;
+import com.inbank.loanserver.models.LoanOfferType;
 import com.inbank.loanserver.services.KeyValueStoreService;
 import com.inbank.loanserver.services.LoanOfferService;
 import com.inbank.loanserver.services.LoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -58,7 +56,7 @@ public class LoanServiceImpl implements LoanService {
             if (sum > minLoanAmount) {
                 // Offer with suitable amount based on requested period
                 LoanOffer loanOfferBasic = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,
-                        sum, loanApplication.getRequestPeriod(), maxLoanPeriod));
+                        sum, loanApplication.getRequestPeriod(), maxLoanPeriod, LoanOfferType.BASIC));
                 loanOffers.add(loanOfferBasic);
 
                 minLoanAmount = sum;
@@ -68,22 +66,35 @@ public class LoanServiceImpl implements LoanService {
 
             if (potentialPeriod <= maxLoanPeriod) {
                 // Offer with requested amount and suitable period based on credit score and credit coefficient
+                LoanOfferType loanOfferType = loanOffers.isEmpty() ? LoanOfferType.BASIC : LoanOfferType.PLUS;
                 LoanOffer loanOfferPlus = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,
-                        loanApplication.getRequestAmount(), potentialPeriod, maxLoanPeriod));
+                        loanApplication.getRequestAmount(), potentialPeriod, maxLoanPeriod, loanOfferType));
                 loanOffers.add(loanOfferPlus);
 
                 minLoanAmount = loanApplication.getRequestAmount();
             }
 
             // Offer with maximum amount based on credit modifier and credit coefficient with suitable period
+            LoanOfferType loanOfferType;
+
+            if (loanOffers.isEmpty()) {
+                loanOfferType = LoanOfferType.BASIC;
+            } else if (loanOffers.size() == 1) {
+                loanOfferType = LoanOfferType.PLUS;
+            } else {
+                loanOfferType = LoanOfferType.MAX;
+            }
+
             LoanOffer loanOfferAdv = loanOfferService.createLoanOffer(getAdvancedLoanOffer(loanApplication,
-                    creditScore, creditCoefficient, minLoanAmount, maxLoanAmount, minLoanPeriod, maxLoanPeriod));
+                    creditScore, creditCoefficient, minLoanAmount, maxLoanAmount, minLoanPeriod, maxLoanPeriod,
+                    loanOfferType));
             loanOffers.add(loanOfferAdv);
 
         } else {
             // Offer with requested amount and requested period
             LoanOffer loanOfferBasic = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,
-                    loanApplication.getRequestAmount(), loanApplication.getRequestPeriod(), maxLoanPeriod));
+                    loanApplication.getRequestAmount(), loanApplication.getRequestPeriod(), maxLoanPeriod,
+                    LoanOfferType.BASIC));
             loanOffers.add(loanOfferBasic);
 
             var maxSum = Math.round(creditScore * loanApplication.getRequestAmount());
@@ -91,18 +102,18 @@ public class LoanServiceImpl implements LoanService {
             if (maxSum < maxLoanAmount) {
                 // Offer with additional amount based on requested period
                 LoanOffer loanOfferPlus = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,
-                        maxSum, loanApplication.getRequestPeriod(), maxLoanPeriod));
+                        maxSum, loanApplication.getRequestPeriod(), maxLoanPeriod, LoanOfferType.PLUS));
                 loanOffers.add(loanOfferPlus);
 
                 // Offer with maximum amount based on credit modifier and credit coefficient with suitable period
                 LoanOffer loanOfferAdv = loanOfferService.createLoanOffer(getAdvancedLoanOffer(loanApplication,
                         creditScore, creditCoefficient, maxSum, maxLoanAmount, loanApplication.getRequestPeriod(),
-                        maxLoanPeriod));
+                        maxLoanPeriod, LoanOfferType.MAX));
                 loanOffers.add(loanOfferAdv);
             } else {
                 // Offer with maximum amount with maximum period
                 LoanOffer loanOfferMax = loanOfferService.createLoanOffer(getLoanOffer(loanApplication, creditScore,
-                        maxLoanAmount, loanApplication.getRequestPeriod(), maxLoanPeriod));
+                        maxLoanAmount, loanApplication.getRequestPeriod(), maxLoanPeriod, LoanOfferType.MAX));
                 loanOffers.add(loanOfferMax);
             }
         }
@@ -112,7 +123,7 @@ public class LoanServiceImpl implements LoanService {
 
     // PRIVATE METHODS //
     private LoanOffer getLoanOffer(LoanApplication loanApplication, float creditScore, int loanAmount,
-                                   int minLoanPeriod, int maxLoanPeriod) {
+                                   int minLoanPeriod, int maxLoanPeriod, LoanOfferType loanOfferType) {
         LoanOffer loanOffer = new LoanOffer();
         loanOffer.setLoanApplication(loanApplication);
         loanOffer.setCreditScore(creditScore);
@@ -120,12 +131,14 @@ public class LoanServiceImpl implements LoanService {
         loanOffer.setMinPeriod(minLoanPeriod);
         loanOffer.setMaxPeriod(maxLoanPeriod);
         loanOffer.setLoanOfferStatus(LoanOfferStatus.PENDING);
+        loanOffer.setLoanOfferType(loanOfferType);
 
         return loanOffer;
     }
 
     private LoanOffer getAdvancedLoanOffer(LoanApplication loanApplication, float creditScore, float creditCoefficient,
-                                           int minLoanAmount, int maxLoanAmount, int minLoanPeriod, int maxLoanPeriod) {
+                                           int minLoanAmount, int maxLoanAmount, int minLoanPeriod, int maxLoanPeriod
+            , LoanOfferType loanOfferType) {
         int creditModifier = loanApplication.getPerson().getCreditModifier().getValue(),
                 bestLoanAmount = 0, bestLoanPeriod = 0, highestLoan = 0,
                 loanIncrementor = Math.round(((float) creditModifier / 2));
@@ -144,21 +157,21 @@ public class LoanServiceImpl implements LoanService {
             }
         }
 
-        return getLoanOffer(loanApplication, creditScore, bestLoanAmount, bestLoanPeriod, maxLoanPeriod);
+        return getLoanOffer(loanApplication, creditScore, bestLoanAmount, bestLoanPeriod, maxLoanPeriod, loanOfferType);
     }
 
-    private LoanProposal convertLoanOfferToLoanProposal(LoanOffer loanOffer) {
-        return new LoanProposal(loanOffer.getId(), loanOffer.getLoanAmount(), loanOffer.getMinPeriod(),
-                loanOffer.getMaxPeriod());
+    private LoanOfferDto convertLoanOfferToLoanOfferDto(LoanOffer loanOffer) {
+        return new LoanOfferDto(loanOffer.getId(), loanOffer.getLoanOfferType().name(), loanOffer.getLoanAmount(),
+                loanOffer.getMinPeriod(), loanOffer.getMaxPeriod());
     }
 
     private LoanResponse getLoanResponse(boolean isPositive, Set<LoanOffer> loanOffers) {
-        Set<LoanProposal> loanProposals = loanOffers.stream()
+        Set<LoanOfferDto> loanOfferDtos = loanOffers.stream()
                 .sorted(Comparator.comparing(LoanOffer::getLoanAmount).reversed())
-                .map(this::convertLoanOfferToLoanProposal)
+                .map(this::convertLoanOfferToLoanOfferDto)
                 .collect(Collectors.toUnmodifiableSet());
 
         return new LoanResponse(isPositive ? LoanDecisionStatus.POSITIVE.name() : LoanDecisionStatus.NEGATIVE.name(),
-                loanProposals);
+                loanOfferDtos);
     }
 }

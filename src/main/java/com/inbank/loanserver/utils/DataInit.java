@@ -107,6 +107,11 @@ public class DataInit {
         keyValueStore.setValue(1);
         keyValueStoreService.createKeyValueStore(keyValueStore);
 
+        keyValueStore = new KeyValueStore();
+        keyValueStore.setKey("BASE_INTEREST_RATE");
+        keyValueStore.setValue(5);
+        keyValueStoreService.createKeyValueStore(keyValueStore);
+
         log.info("Data init key store finished");
     }
 

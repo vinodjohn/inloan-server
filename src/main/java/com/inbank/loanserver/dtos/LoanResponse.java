@@ -8,5 +8,5 @@ import java.util.Set;
  * @author vinodjohn
  * @created 29.08.2024
  */
-public record LoanResponse(String loanDecisionStatus, Set<LoanProposal> loanProposals) {
+public record LoanResponse(String loanDecisionStatus, Set<LoanOfferDto> loanOfferDtos) {
 }

@@ -1,8 +1,10 @@
 package com.inbank.loanserver.utils;
 
-import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,6 +17,7 @@ import org.springframework.web.util.WebUtils;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A helper component class to provide security functionalities for this app.
@@ -26,10 +29,12 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class SecurityUtils {
-    private static final SecretKey JWT_SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
-    @Value("${inLoan.app.jwtExpirationMs}")
-    private int jwtExpirationMs;
+    @Value("${inLoan.app.jwtSecret}")
+    private String jwtSecret;
+
+    @Value("${inLoan.app.jwtExpirationSec}")
+    private int jwtExpirationSec;
 
     @Value("${inLoan.app.jwtCookieName}")
     private String jwtCookieName;
@@ -38,11 +43,16 @@ public class SecurityUtils {
     private String jwtRefreshCookieName;
 
     public String generateTokenFromUsername(String username) {
+        long currentTimeMillis = System.currentTimeMillis();
+        Date now = new Date(currentTimeMillis);
+        Date expiryDate = new Date(currentTimeMillis + TimeUnit.SECONDS.toMillis(jwtExpirationSec));
+
+
         return Jwts.builder()
                 .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(JWT_SECRET_KEY)
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(this.getSecretKey())
                 .compact();
     }
 
@@ -73,7 +83,7 @@ public class SecurityUtils {
 
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser()
-                .verifyWith(JWT_SECRET_KEY)
+                .verifyWith(this.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload()
@@ -83,17 +93,28 @@ public class SecurityUtils {
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser()
-                    .verifyWith(JWT_SECRET_KEY)
+                    .verifyWith(this.getSecretKey())
                     .build()
                     .parseSignedClaims(authToken);
             return true;
-        } catch (JwtException e) {
-            log.error("JWT token validation error: {}", e.getMessage());
+        } catch (MalformedJwtException e) {
+            log.error("Invalid JWT token: {}", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("JWT token is expired: {}", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("JWT token is unsupported: {}", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("JWT claims string is empty: {}", e.getMessage());
         }
+
         return false;
     }
 
     // PRIVATE METHODS //
+    private SecretKey getSecretKey() {
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
+    }
+
     private ResponseCookie generateCookie(String name, String value, String path) {
         return ResponseCookie.from(name, value)
                 .path(path)

@@ -11,6 +11,7 @@ import com.inbank.loanserver.services.LoanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,6 +50,7 @@ public class LoanController {
 
             LoanApplication newLoanApplication = loanApplicationService.createLoanApplication(loanApplication);
             LoanResponse loanResponse = loanService.getLoanDecision(newLoanApplication);
+
             return ResponseEntity.ok(loanResponse);
         } else {
             throw new IllegalStateException(MessageFormat.format("Unexpected principal type: {0}",

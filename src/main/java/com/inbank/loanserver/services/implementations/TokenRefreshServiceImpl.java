@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -31,14 +31,14 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
     @Autowired
     private PersonService personService;
 
-    @Value("${inLoan.app.jwtRefreshExpirationMs}")
-    private Long tokenRefreshDurationMs;
+    @Value("${inLoan.app.jwtRefreshExpirationSec}")
+    private int tokenRefreshDuration;
 
     @Override
     public TokenRefresh createRefreshToken(UUID personId) throws PersonNotFoundException {
         TokenRefresh tokenRefresh = new TokenRefresh();
         tokenRefresh.setToken(UUID.randomUUID().toString());
-        tokenRefresh.setEndTime(Instant.now().plusMillis(tokenRefreshDurationMs));
+        tokenRefresh.setEndTime(LocalDateTime.now().plusSeconds(tokenRefreshDuration));
         tokenRefresh.setPerson(personService.findPersonById(personId));
         tokenRefresh.setActive(true);
 
@@ -69,9 +69,7 @@ public class TokenRefreshServiceImpl implements TokenRefreshService {
 
     @Override
     public TokenRefresh verifyTokenExpiry(TokenRefresh tokenRefresh) {
-        var now = Instant.now();
-
-        if (tokenRefresh.getEndTime().isBefore(now)) {
+        if (tokenRefresh.getEndTime().isBefore(LocalDateTime.now())) {
             deleteTokenRefreshById(tokenRefresh.getId());
             throw new TokenRefreshException(tokenRefresh.getToken(), "Refresh token was expired. Please sign in again");
         }

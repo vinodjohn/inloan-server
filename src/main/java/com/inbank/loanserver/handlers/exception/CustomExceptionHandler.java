@@ -53,6 +53,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(LoanContractNotFoundException.class)
+    public final ResponseEntity<Object> handleLoanContractNotFoundException(Exception ex) {
+        return new ResponseEntity<>(getErrorResponse(ex.getLocalizedMessage(), LoanContract.class),
+                HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(LoanOfferNotFoundException.class)
     public final ResponseEntity<Object> handleLoanOfferNotFoundException(Exception ex) {
         return new ResponseEntity<>(getErrorResponse(ex.getLocalizedMessage(), LoanOffer.class),
@@ -68,6 +74,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(PersonNotFoundException.class)
     public final ResponseEntity<Object> handlePersonNotFoundException(Exception ex) {
         return new ResponseEntity<>(getErrorResponse(ex.getLocalizedMessage(), Person.class),
+                HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public final ResponseEntity<Object> handleRoleNotFoundException(Exception ex) {
+        return new ResponseEntity<>(getErrorResponse(ex.getLocalizedMessage(), Role.class),
                 HttpStatus.NOT_FOUND);
     }
 

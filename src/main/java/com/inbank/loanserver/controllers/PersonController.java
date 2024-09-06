@@ -44,6 +44,7 @@ public class PersonController {
         List<Person> personList = personPage.stream()
                 .collect(Collectors.toList());
         ObjectListDto objectListDto = new ObjectListDto(personList, pageNum, personPage.getTotalElements());
+
         return ResponseEntity.ok(objectListDto);
     }
 

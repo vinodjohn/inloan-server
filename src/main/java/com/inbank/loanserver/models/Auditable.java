@@ -26,8 +26,8 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract sealed class Auditable<V> permits CreditModifier, KeyValueStore, LoanApplication, LoanOffer, Person,
-        TokenRefresh, Role {
+public abstract sealed class Auditable<V> permits CreditModifier, KeyValueStore, LoanApplication, LoanContract,
+        LoanOffer, Person, Role, TokenRefresh {
     @CreatedBy
     @JsonIgnore
     @Column(updatable = false)
