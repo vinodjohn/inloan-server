@@ -15,5 +15,5 @@ import java.util.UUID;
  */
 public interface KeyValueStoreRepository extends PagingAndSortingRepository<KeyValueStore, UUID>,
         JpaRepository<KeyValueStore, UUID> {
-    Optional<KeyValueStore> findByKey(String key);
+    Optional<KeyValueStore> findByKeyAndIsActiveTrue(String key);
 }

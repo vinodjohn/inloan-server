@@ -48,7 +48,7 @@ public class KeyValueStoreServiceImpl implements KeyValueStoreService {
 
     @Override
     public KeyValueStore findKeyValueStoreByKey(String key) throws KeyValueStoreNotFoundException {
-        Optional<KeyValueStore> optionalKeyValueStore = keyValueStoreRepository.findByKey(key.toUpperCase());
+        Optional<KeyValueStore> optionalKeyValueStore = keyValueStoreRepository.findByKeyAndIsActiveTrue(key.toUpperCase());
 
         if (optionalKeyValueStore.isEmpty()) {
             throw new KeyValueStoreNotFoundException(key);

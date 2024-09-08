@@ -87,9 +87,7 @@ public class SecurityConfiguration {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/sign-up").permitAll()
-                        .requestMatchers("/auth/sign-in").permitAll()
-                        .requestMatchers("/auth/refresh-token").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 );
 

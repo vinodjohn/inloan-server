@@ -46,7 +46,8 @@ public class CreditModifierServiceImpl implements CreditModifierService {
 
     @Override
     public CreditModifier findCreditModifierByName(String name) throws CreditModifierNotFoundException {
-        Optional<CreditModifier> optionalCreditModifier = creditModifierRepository.findByName(name.toUpperCase());
+        Optional<CreditModifier> optionalCreditModifier =
+                creditModifierRepository.findByNameAndIsActiveTrue(name.toUpperCase());
 
         if (optionalCreditModifier.isEmpty()) {
             throw new CreditModifierNotFoundException(name);

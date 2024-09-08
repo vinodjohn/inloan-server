@@ -7,6 +7,7 @@ import com.inbank.loanserver.exceptions.LoanContractNotFoundException;
 import com.inbank.loanserver.exceptions.LoanOfferNotFoundException;
 import com.inbank.loanserver.models.LoanContract;
 import com.inbank.loanserver.models.LoanOffer;
+import com.inbank.loanserver.models.LoanOfferStatus;
 import com.inbank.loanserver.services.LoanContractService;
 import com.inbank.loanserver.services.LoanOfferService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,7 @@ public class LoanContractController {
         LoanOffer loanOffer = loanOfferService.findLoanOfferById(loanContractRequest.loanOfferId());
 
         if (loanOffer != null) {
+            loanOffer.setLoanOfferStatus(LoanOfferStatus.ACCEPTED);
             LoanContract loanContract = new LoanContract();
             loanContract.setLoanOffer(loanOffer);
             loanContract.setPeriod(loanContractRequest.period());

@@ -18,8 +18,9 @@ import java.util.UUID;
 @Repository
 public interface CreditModifierRepository extends PagingAndSortingRepository<CreditModifier, UUID>,
         JpaRepository<CreditModifier, UUID> {
-    Optional<CreditModifier> findByName(String name);
+    Optional<CreditModifier> findByNameAndIsActiveTrue(String name);
 
-    @Query(value = "SELECT * FROM credit_modifier ORDER BY RANDOM() LIMIT 1", nativeQuery = true)
+    @Query(value = "SELECT * FROM credit_modifier WHERE is_active = true ORDER BY RANDOM() LIMIT 1", nativeQuery =
+            true)
     Optional<CreditModifier> findRandom();
 }
