@@ -47,14 +47,15 @@ public class ValidationServiceImpl implements ValidationService {
                     false));
         }
 
-        try {
-            creditModifierService.findCreditModifierByName(creditModifier.getName().toUpperCase());
-            throw new LoanValidationException(getExceptionMessage(CreditModifier.class, "name",
-                    true));
-        } catch (CreditModifierNotFoundException e) {
-            log.info("Credit Modifier with name {} not found", creditModifier.getName());
+        if (creditModifier.getId() == null && !creditModifier.isActive()) {
+            try {
+                creditModifierService.findCreditModifierByName(creditModifier.getName().toUpperCase());
+                throw new LoanValidationException(getExceptionMessage(CreditModifier.class, "name",
+                        true));
+            } catch (CreditModifierNotFoundException e) {
+                log.info("Credit Modifier with name {} not found", creditModifier.getName());
+            }
         }
-
     }
 
     @Override
@@ -69,13 +70,16 @@ public class ValidationServiceImpl implements ValidationService {
                     false));
         }
 
-        try {
-            keyValueStoreService.findKeyValueStoreByKey(keyValueStore.getKey());
-            throw new LoanValidationException(getExceptionMessage(KeyValueStore.class, "key",
-                    true));
-        } catch (KeyValueStoreNotFoundException e) {
-            log.info("Key store with key {} not found", keyValueStore.getKey());
+        if (keyValueStore.getId() == null && !keyValueStore.isActive()) {
+            try {
+                keyValueStoreService.findKeyValueStoreByKey(keyValueStore.getKey());
+                throw new LoanValidationException(getExceptionMessage(KeyValueStore.class, "key",
+                        true));
+            } catch (KeyValueStoreNotFoundException e) {
+                log.info("Key store with key {} not found", keyValueStore.getKey());
+            }
         }
+
     }
 
     @Override
