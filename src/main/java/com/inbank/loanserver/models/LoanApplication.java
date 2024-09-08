@@ -1,5 +1,6 @@
 package com.inbank.loanserver.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -22,6 +23,7 @@ public final class LoanApplication extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Person person;
 

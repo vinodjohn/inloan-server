@@ -1,5 +1,6 @@
 package com.inbank.loanserver.controllers;
 
+import com.inbank.loanserver.configurations.security.CustomUserDetails;
 import com.inbank.loanserver.dtos.ObjectListDto;
 import com.inbank.loanserver.exceptions.LoanApplicationNotFoundException;
 import com.inbank.loanserver.models.LoanApplication;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +40,26 @@ public class LoanApplicationController {
             @RequestParam(name = "order", defaultValue = "desc") String order) {
         Page<LoanApplication> loanApplicationPage =
                 loanApplicationService.findAllLoanApplications(PageRequest.of(pageNum
-                , totalItem, getSortOfColumn(sort, order)));
+                        , totalItem, getSortOfColumn(sort, order)));
+        List<LoanApplication> loanApplicationList = loanApplicationPage.stream()
+                .collect(Collectors.toList());
+        ObjectListDto objectListDto = new ObjectListDto(loanApplicationList, pageNum,
+                loanApplicationPage.getTotalElements());
+
+        return ResponseEntity.ok(objectListDto);
+    }
+
+    @GetMapping("/personal")
+    public ResponseEntity<ObjectListDto> getSortedLoanApplicationOfPersonByPage(
+            @RequestParam(name = "page", defaultValue = "0") int pageNum,
+            @RequestParam(name = "items", defaultValue = DEFAULT_ITEMS_PER_PAGE) int totalItem,
+            @RequestParam(name = "sort", defaultValue = "createdDate") String sort,
+            @RequestParam(name = "order", defaultValue = "desc") String order) throws LoanApplicationNotFoundException {
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Page<LoanApplication> loanApplicationPage =
+                loanApplicationService.findLoanApplicationsByPerson(PageRequest.of(pageNum
+                        , totalItem, getSortOfColumn(sort, order)), customUserDetails.getPerson());
         List<LoanApplication> loanApplicationList = loanApplicationPage.stream()
                 .collect(Collectors.toList());
         ObjectListDto objectListDto = new ObjectListDto(loanApplicationList, pageNum,

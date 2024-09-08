@@ -92,12 +92,12 @@ public class LoanContractController {
         return ResponseEntity.badRequest().build();
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getLoanContractById(@PathVariable UUID id) throws LoanContractNotFoundException {
         LoanContract loanContract = loanContractService.findLoanContractById(id);
         return ResponseEntity.ok(loanContract);
     }
+
 
     @PutMapping
     public ResponseEntity<?> updateLoanContract(@RequestBody LoanContract loanContract) throws LoanContractNotFoundException {

@@ -23,7 +23,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.text.MessageFormat;
 import java.util.UUID;
@@ -71,9 +74,9 @@ public class AuthController {
         return ResponseEntity.ok()
                 .headers(httpHeaders)
                 .body(new PersonDto(customUserDetails.getPerson().getId(),
-                        customUserDetails.getPerson().getPersonalIdCode(),
                         MessageFormat.format("{0} {1}", customUserDetails.getPerson().getFirstName(),
-                                customUserDetails.getPerson().getLastName()), role));
+                                customUserDetails.getPerson().getLastName()),
+                        customUserDetails.getPerson().getPersonalIdCode(), role));
     }
 
     @PostMapping("/sign-up")

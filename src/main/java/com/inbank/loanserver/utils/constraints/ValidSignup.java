@@ -13,7 +13,7 @@ import java.lang.annotation.*;
  */
 @Documented
 @Target({ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE})
-@Constraint(validatedBy = {PersonValidator.class})
+@Constraint(validatedBy = {SignupValidator.class})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ValidSignup {
     String message() default "{messages.constraints.invalid-data}";

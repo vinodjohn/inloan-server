@@ -1,8 +1,11 @@
 package com.inbank.loanserver.controllers;
 
 import com.inbank.loanserver.dtos.ObjectListDto;
+import com.inbank.loanserver.exceptions.LoanApplicationNotFoundException;
 import com.inbank.loanserver.exceptions.LoanOfferNotFoundException;
+import com.inbank.loanserver.models.LoanApplication;
 import com.inbank.loanserver.models.LoanOffer;
+import com.inbank.loanserver.services.LoanApplicationService;
 import com.inbank.loanserver.services.LoanOfferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +33,9 @@ public class LoanOfferController {
     @Autowired
     private LoanOfferService loanOfferService;
 
+    @Autowired
+    private LoanApplicationService loanApplicationService;
+
     @GetMapping
     public ResponseEntity<ObjectListDto> getSortedLoanOfferByPage(
             @RequestParam(name = "page", defaultValue = "0") int pageNum,
@@ -38,6 +44,27 @@ public class LoanOfferController {
             @RequestParam(name = "order", defaultValue = "desc") String order) {
         Page<LoanOffer> loanOfferPage = loanOfferService.findAllLoanOffers(PageRequest.of(pageNum
                 , totalItem, getSortOfColumn(sort, order)));
+        List<LoanOffer> loanOfferList = loanOfferPage.stream()
+                .collect(Collectors.toList());
+        ObjectListDto objectListDto = new ObjectListDto(loanOfferList, pageNum,
+                loanOfferPage.getTotalElements());
+
+        return ResponseEntity.ok(objectListDto);
+    }
+
+    @GetMapping("/loan-application/{loanApplicationId}")
+    public ResponseEntity<?> getLoanOffersByLoanApplication(
+            @PathVariable UUID loanApplicationId,
+            @RequestParam(name = "page", defaultValue = "0") int pageNum,
+            @RequestParam(name = "items", defaultValue =
+                    DEFAULT_ITEMS_PER_PAGE) int totalItem,
+            @RequestParam(name = "sort",
+                    defaultValue = "createdDate") String sort,
+            @RequestParam(name = "order", defaultValue = "desc") String order) throws LoanApplicationNotFoundException,
+            LoanOfferNotFoundException {
+        LoanApplication loanApplication = loanApplicationService.findLoanApplicationById(loanApplicationId);
+        Page<LoanOffer> loanOfferPage = loanOfferService.findLoanOffersByLoanApplication(PageRequest.of(pageNum
+                , totalItem, getSortOfColumn(sort, order)), loanApplication);
         List<LoanOffer> loanOfferList = loanOfferPage.stream()
                 .collect(Collectors.toList());
         ObjectListDto objectListDto = new ObjectListDto(loanOfferList, pageNum,
