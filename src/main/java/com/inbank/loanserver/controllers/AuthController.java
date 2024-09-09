@@ -76,7 +76,8 @@ public class AuthController {
                 .body(new PersonDto(customUserDetails.getPerson().getId(),
                         MessageFormat.format("{0} {1}", customUserDetails.getPerson().getFirstName(),
                                 customUserDetails.getPerson().getLastName()),
-                        customUserDetails.getPerson().getPersonalIdCode(), role));
+                        customUserDetails.getPerson().getPersonalIdCode(), role,
+                        customUserDetails.getPerson().getCreatedDate()));
     }
 
     @PostMapping("/sign-up")
