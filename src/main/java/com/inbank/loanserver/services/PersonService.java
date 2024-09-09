@@ -41,6 +41,14 @@ public interface PersonService {
     Person findPersonByPersonalIdCode(String personalIdCode) throws PersonNotFoundException;
 
     /**
+     * To find active person by personalID code
+     *
+     * @param personalIdCode personalId code of a person
+     * @return Page of person
+     */
+    Person findActivePersonByPersonalIdCode(String personalIdCode) throws PersonNotFoundException;
+
+    /**
      * To find all persons
      *
      * @param pageable Pageable of Persons
@@ -55,6 +63,14 @@ public interface PersonService {
      * @return Person
      */
     Person updatePerson(Person person) throws PersonNotFoundException;
+
+    /**
+     * To update person with password
+     *
+     * @param person Person
+     * @return Person
+     */
+    Person updatePersonWithPassword(Person person) throws PersonNotFoundException;
 
     /**
      * To delete a person by ID

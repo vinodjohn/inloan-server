@@ -82,6 +82,19 @@ public class PersonServiceImpl implements PersonService {
         return person.get();
     }
 
+
+    @Override
+    public Person findActivePersonByPersonalIdCode(String personalIdCode) throws PersonNotFoundException {
+        Person person = findPersonByPersonalIdCode(personalIdCode);
+
+        if(!person.isActive()) {
+            throw new PersonNotFoundException(personalIdCode);
+        }
+
+        return person;
+    }
+
+
     @Override
     public Page<Person> findAllPersons(Pageable pageable) {
         return personRepository.findAll(pageable);
@@ -89,6 +102,15 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person updatePerson(Person person) throws PersonNotFoundException {
+        if (findPersonById(person.getId()) != null) {
+            return personRepository.saveAndFlush(person);
+        }
+
+        return null;
+    }
+
+    @Override
+    public Person updatePersonWithPassword(Person person) throws PersonNotFoundException {
         if (findPersonById(person.getId()) != null) {
             person.setPassword(bCryptPasswordEncoder.encode(person.getPassword()));
             return personRepository.saveAndFlush(person);

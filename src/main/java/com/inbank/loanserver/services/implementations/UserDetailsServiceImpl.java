@@ -26,7 +26,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         try {
-            Person person = personService.findPersonByPersonalIdCode(username);
+            Person person = personService.findActivePersonByPersonalIdCode(username);
             return new CustomUserDetails(person);
         } catch (PersonNotFoundException e) {
             throw new UsernameNotFoundException(e.getLocalizedMessage());

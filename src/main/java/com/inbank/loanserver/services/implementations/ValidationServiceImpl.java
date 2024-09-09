@@ -115,18 +115,19 @@ public class ValidationServiceImpl implements ValidationService {
                     false));
         }
 
-        try {
-            personService.findPersonByPersonalIdCode(person.getPersonalIdCode());
-            throw new LoanValidationException(getExceptionMessage(Person.class, "Personal ID code",
-                    true));
-        } catch (PersonNotFoundException e) {
-            log.info("Person with personal id {} not found", person.getPersonalIdCode());
+        if (person.getId() == null && !person.isActive()) {
+            try {
+                personService.findPersonByPersonalIdCode(person.getPersonalIdCode());
+                throw new LoanValidationException(getExceptionMessage(Person.class, "Personal ID code",
+                        true));
+            } catch (PersonNotFoundException e) {
+                log.info("Person with personal id {} not found", person.getPersonalIdCode());
+            }
         }
-
 
         if (person.getCreditModifier() != null) {
             try {
-                creditModifierService.findCreditModifierById(person.getId());
+                creditModifierService.findCreditModifierById(person.getCreditModifier().getId());
             } catch (CreditModifierNotFoundException e) {
                 throw new LoanValidationException(getExceptionMessage(Person.class, "credit modifier",
                         false));
@@ -146,16 +147,18 @@ public class ValidationServiceImpl implements ValidationService {
     @Override
     public void validateRole(Role role) throws LoanValidationException {
         if (role.getName() == null) {
-            throw new LoanValidationException(getExceptionMessage(Role.class, "Role type",
+            throw new LoanValidationException(getExceptionMessage(Role.class, "Role name",
                     false));
         }
 
-        try {
-            roleService.findRoleByName(role.getName());
-            throw new LoanValidationException(getExceptionMessage(KeyValueStore.class, "Role type",
-                    true));
-        } catch (RoleNotFoundException e) {
-            log.info("Role with name {} not found", role.getName());
+        if (role.getId() == null && !role.isActive()) {
+            try {
+                roleService.findRoleByName(role.getName());
+                throw new LoanValidationException(getExceptionMessage(Role.class, "Role name",
+                        true));
+            } catch (RoleNotFoundException e) {
+                log.info("Role with name {} not found", role.getName());
+            }
         }
     }
 
