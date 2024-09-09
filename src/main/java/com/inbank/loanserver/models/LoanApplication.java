@@ -23,7 +23,6 @@ public final class LoanApplication extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     private Person person;
 
