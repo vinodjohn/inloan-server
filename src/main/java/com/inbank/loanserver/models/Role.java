@@ -22,8 +22,7 @@ public final class Role extends Auditable<String> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Enumerated(EnumType.STRING)
-    private RoleType roleType;
+    private String name;
 
     @JsonProperty("isActive")
     private boolean isActive;

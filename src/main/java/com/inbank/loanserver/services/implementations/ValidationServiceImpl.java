@@ -145,17 +145,17 @@ public class ValidationServiceImpl implements ValidationService {
 
     @Override
     public void validateRole(Role role) throws LoanValidationException {
-        if (role.getRoleType() == null) {
+        if (role.getName() == null) {
             throw new LoanValidationException(getExceptionMessage(Role.class, "Role type",
                     false));
         }
 
         try {
-            roleService.findRoleByRoleType(role.getRoleType());
+            roleService.findRoleByName(role.getName());
             throw new LoanValidationException(getExceptionMessage(KeyValueStore.class, "Role type",
                     true));
         } catch (RoleNotFoundException e) {
-            log.info("Role with Role Type {} not found", role.getRoleType());
+            log.info("Role with name {} not found", role.getName());
         }
     }
 

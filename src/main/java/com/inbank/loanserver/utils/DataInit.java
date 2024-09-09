@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import static com.inbank.loanserver.utils.Constants.Audit.ROLE_ADMIN;
+import static com.inbank.loanserver.utils.Constants.Audit.ROLE_USER;
 import static com.inbank.loanserver.utils.Constants.KvStore.*;
 
 /**
@@ -119,11 +121,11 @@ public class DataInit {
         log.info("Data init role started");
 
         Role role = new Role();
-        role.setRoleType(RoleType.ADMIN);
+        role.setName(ROLE_ADMIN);
         roleService.createRole(role);
 
         role = new Role();
-        role.setRoleType(RoleType.USER);
+        role.setName(ROLE_USER);
         roleService.createRole(role);
 
         log.info("Data init role finished");
@@ -136,7 +138,7 @@ public class DataInit {
             Person person = new Person();
             CreditModifier creditModifierSegment3 =
                     creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_SEGMENT3);
-            Role roleAdmin = roleService.findRoleByRoleType(RoleType.ADMIN);
+            Role roleAdmin = roleService.findRoleByName(ROLE_ADMIN);
             person.setFirstName("Falcon");
             person.setLastName("Ameri");
             person.setPersonalIdCode("39403160272");
@@ -147,7 +149,7 @@ public class DataInit {
 
             person = new Person();
             CreditModifier creditModifierDebt = creditModifierService.findCreditModifierByName(CREDIT_MODIFIER_DEBT);
-            Role roleUser = roleService.findRoleByRoleType(RoleType.USER);
+            Role roleUser = roleService.findRoleByName(ROLE_USER);
             person.setFirstName("Thor");
             person.setLastName("Thunder");
             person.setPersonalIdCode("49002010965");

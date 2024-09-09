@@ -2,7 +2,6 @@ package com.inbank.loanserver.services;
 
 import com.inbank.loanserver.exceptions.RoleNotFoundException;
 import com.inbank.loanserver.models.Role;
-import com.inbank.loanserver.models.RoleType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -32,12 +31,12 @@ public interface RoleService {
     Role findRoleById(UUID id) throws RoleNotFoundException;
 
     /**
-     * To find role by RoleType
+     * To find role by name
      *
-     * @param roleType Roletype
+     * @param name name of the Role
      * @return Role object
      */
-    Role findRoleByRoleType(RoleType roleType) throws RoleNotFoundException;
+    Role findRoleByName(String name) throws RoleNotFoundException;
 
     /**
      * To find all roles

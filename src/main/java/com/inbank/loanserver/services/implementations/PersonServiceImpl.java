@@ -6,7 +6,6 @@ import com.inbank.loanserver.exceptions.RoleNotFoundException;
 import com.inbank.loanserver.models.CreditModifier;
 import com.inbank.loanserver.models.Person;
 import com.inbank.loanserver.models.Role;
-import com.inbank.loanserver.models.RoleType;
 import com.inbank.loanserver.repositories.PersonRepository;
 import com.inbank.loanserver.services.CreditModifierService;
 import com.inbank.loanserver.services.PersonService;
@@ -20,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.inbank.loanserver.utils.Constants.Audit.ROLE_USER;
 
 /**
  * Implementations of PersonService
@@ -50,7 +51,7 @@ public class PersonServiceImpl implements PersonService {
         }
 
         if (person.getRole() == null) {
-            Role role = roleService.findRoleByRoleType(RoleType.USER);
+            Role role = roleService.findRoleByName(ROLE_USER);
             person.setRole(role);
         }
 
