@@ -15,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.inbank.loanserver.utils.LoanUtils.getSortOfColumn;
 
@@ -82,7 +81,7 @@ public class LoanOfferServiceImpl implements LoanOfferService {
     }
 
     @Override
-    public void changeLoanOfferSiblingStatus(LoanApplication loanApplication, LoanOffer loanOffer) throws LoanOfferNotFoundException {
+    public void changeLoanOfferSiblingStatus(LoanApplication loanApplication, LoanOffer loanOffer) {
         Page<LoanOffer> loanOfferPage = findLoanOffersByLoanApplication(PageRequest.of(0
                 , 10, getSortOfColumn("createdDate", "desc")), loanApplication);
 
