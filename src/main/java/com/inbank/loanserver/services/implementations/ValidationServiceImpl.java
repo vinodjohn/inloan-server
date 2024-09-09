@@ -1,5 +1,7 @@
 package com.inbank.loanserver.services.implementations;
 
+import com.inbank.loanserver.configurations.security.CustomUserDetails;
+import com.inbank.loanserver.dtos.ChangePassword;
 import com.inbank.loanserver.dtos.LoanRequest;
 import com.inbank.loanserver.exceptions.*;
 import com.inbank.loanserver.models.CreditModifier;
@@ -10,6 +12,8 @@ import com.inbank.loanserver.services.*;
 import com.inbank.loanserver.utils.LoanUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
@@ -34,6 +38,9 @@ public class ValidationServiceImpl implements ValidationService {
 
     @Autowired
     private RoleService roleService;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void validateCreditModifier(CreditModifier creditModifier) throws LoanValidationException {
@@ -159,6 +166,22 @@ public class ValidationServiceImpl implements ValidationService {
             } catch (RoleNotFoundException e) {
                 log.info("Role with name {} not found", role.getName());
             }
+        }
+    }
+
+    @Override
+    public void validateChangePassword(ChangePassword changePassword) {
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Person person = customUserDetails.getPerson();
+
+        if (!bCryptPasswordEncoder.matches(changePassword.oldPassword(), person.getPassword())) {
+            throw new RuntimeException("Old Password is incorrect!");
+        }
+
+        if (changePassword.newPassword().length() < 6) {
+            throw new RuntimeException("New Password is invalid!");
         }
     }
 

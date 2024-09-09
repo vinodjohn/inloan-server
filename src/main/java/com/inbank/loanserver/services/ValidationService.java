@@ -1,5 +1,6 @@
 package com.inbank.loanserver.services;
 
+import com.inbank.loanserver.dtos.ChangePassword;
 import com.inbank.loanserver.dtos.LoanRequest;
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.KeyValueStoreNotFoundException;
@@ -51,4 +52,11 @@ public interface ValidationService {
      * @param role Role object
      */
     void validateRole(Role role) throws LoanValidationException;
+
+    /**
+     * To validate Change Password
+     *
+     * @param changePassword Change Password
+     */
+    void validateChangePassword(ChangePassword changePassword);
 }

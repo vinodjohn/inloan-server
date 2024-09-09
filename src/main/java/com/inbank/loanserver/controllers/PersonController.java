@@ -1,5 +1,7 @@
 package com.inbank.loanserver.controllers;
 
+import com.inbank.loanserver.configurations.security.CustomUserDetails;
+import com.inbank.loanserver.dtos.ChangePassword;
 import com.inbank.loanserver.dtos.ObjectListDto;
 import com.inbank.loanserver.exceptions.CreditModifierNotFoundException;
 import com.inbank.loanserver.exceptions.PersonNotFoundException;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,6 +54,18 @@ public class PersonController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getPersonById(@PathVariable UUID id) throws PersonNotFoundException {
         Person person = personService.findPersonById(id);
+        return ResponseEntity.ok(person);
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePassword changePassword)
+            throws PersonNotFoundException {
+        CustomUserDetails customUserDetails =
+                (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Person person = customUserDetails.getPerson();
+        person.setPassword(changePassword.newPassword());
+        personService.updatePersonWithPassword(person);
         return ResponseEntity.ok(person);
     }
 
