@@ -69,4 +69,12 @@ public interface LoanOfferService {
      * @param id LoanOffer ID
      */
     void restoreLoanOfferById(UUID id) throws LoanOfferNotFoundException;
+
+    /**
+     * To change loan offer status
+     *
+     * @param loanApplication Loan application of the loan offer
+     * @param loanOffer Loan offer accepted
+     */
+    void changeLoanOfferSiblingStatus(LoanApplication loanApplication, LoanOffer loanOffer) throws LoanOfferNotFoundException;
 }

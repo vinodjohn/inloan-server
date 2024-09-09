@@ -1,9 +1,11 @@
 package com.inbank.loanserver.services.implementations;
 
 import com.inbank.loanserver.exceptions.LoanContractNotFoundException;
+import com.inbank.loanserver.exceptions.LoanOfferNotFoundException;
 import com.inbank.loanserver.models.LoanContract;
 import com.inbank.loanserver.repositories.LoanContractRepository;
 import com.inbank.loanserver.services.LoanContractService;
+import com.inbank.loanserver.services.LoanOfferService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,8 +27,14 @@ public class LoanContractServiceImpl implements LoanContractService {
     @Autowired
     private LoanContractRepository loanContractRepository;
 
+    @Autowired
+    LoanOfferService loanOfferService;
+
     @Override
-    public LoanContract createLoanContract(LoanContract loanContract) {
+    public LoanContract createLoanContract(LoanContract loanContract) throws LoanOfferNotFoundException {
+        loanOfferService.changeLoanOfferSiblingStatus(loanContract.getLoanOffer().getLoanApplication(),
+                loanContract.getLoanOffer());
+
         loanContract.setActive(true);
         return loanContractRepository.saveAndFlush(loanContract);
     }

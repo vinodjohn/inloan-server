@@ -1,6 +1,7 @@
 package com.inbank.loanserver.services;
 
 import com.inbank.loanserver.exceptions.LoanContractNotFoundException;
+import com.inbank.loanserver.exceptions.LoanOfferNotFoundException;
 import com.inbank.loanserver.models.LoanContract;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,7 @@ public interface LoanContractService {
      * @param loanContract The LoanContract object to be created.
      * @return The created LoanContract object.
      */
-    LoanContract createLoanContract(LoanContract loanContract);
+    LoanContract createLoanContract(LoanContract loanContract) throws LoanOfferNotFoundException;
 
     /**
      * To find a Loan Contract by ID
