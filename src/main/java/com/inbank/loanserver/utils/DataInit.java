@@ -54,8 +54,7 @@ public class DataInit {
         log.info("Data init finished");
     }
 
-    // PRIVATE METHODS //
-    private void initCreditModifier() {
+    public void initCreditModifier() {
         log.info("Data init credit modifier started");
 
         CreditModifier creditModifier = new CreditModifier();
@@ -81,7 +80,7 @@ public class DataInit {
         log.info("Data init credit modifier finished");
     }
 
-    private void initKeyValueStore() {
+    public void initKeyValueStore() {
         log.info("Data init key store started");
 
         KeyValueStore keyValueStore = new KeyValueStore();
@@ -117,7 +116,7 @@ public class DataInit {
         log.info("Data init key store finished");
     }
 
-    private void initRole() {
+    public void initRole() {
         log.info("Data init role started");
 
         Role role = new Role();
@@ -131,7 +130,7 @@ public class DataInit {
         log.info("Data init role finished");
     }
 
-    private void initPerson() {
+    public void initPerson() {
         log.info("Data init person started");
 
         try {
@@ -195,5 +194,4 @@ public class DataInit {
             log.info(e.getLocalizedMessage());
         }
     }
-
 }

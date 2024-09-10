@@ -48,8 +48,7 @@ public class LoanUtils {
         return checkChecksum(idNumber);
     }
 
-    // PRIVATE METHODS //
-    private static boolean isBirthDateValid(String birthDate, int century) {
+    public static boolean isBirthDateValid(String birthDate, int century) {
         int year = Integer.parseInt(birthDate.substring(0, 2)),
                 month = Integer.parseInt(birthDate.substring(2, 4)),
                 day = Integer.parseInt(birthDate.substring(4, 6));
@@ -79,7 +78,7 @@ public class LoanUtils {
         }
     }
 
-    private static boolean checkChecksum(String idNumber) {
+    public static boolean checkChecksum(String idNumber) {
         int[] firstWeights = {1, 2, 3, 4, 5, 6, 7, 8, 9, 1},
                 secondWeights = {3, 4, 5, 6, 7, 8, 9, 1, 2, 3};
         int expectedChecksum = idNumber.charAt(10) - '0',
