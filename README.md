@@ -23,9 +23,8 @@ The front-end application can be found **here** - [GitHub](https://github.com/vi
     - [Prerequisites](#prerequisites)
     - [Installation](#installation)
     - [Running the Application](#running-the-application)
-- [Project Structure](#project-structure)
 - [Configuration](#configuration)
-- [Authors](#authors)
+- [Author](#authors)
 - [License](#license)
 
 ## Features
