@@ -7,8 +7,8 @@ functionalities like loan offers and loan contract management. It is built using
 including Spring Boot, Spring Data JPA, Spring MVC. This project is intended to serve as a backend service 
 that interacts with a database for user and loan management.
 
-_Please note that the initial task was to build only loan decision with single endpoint. But to add some additional 
-features, the app has been developed with security through ID code, saving loan offer, application and contracts to 
+_Please note that the initial task was to build only loan decision engine with single endpoint. But to add some 
+additional features, the app has been developed with security through ID code, saving loan offer, application and contracts to 
 the DB. Also, Admin user can modify the credit_modifier, loan limits etc. through the front-end application._
 
 The front-end application can be found **here** - [GitHub](https://github.com/vinodjohn/inloan-client)
