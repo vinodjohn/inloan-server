@@ -15,10 +15,10 @@ public class CreditModifierNotFoundException extends Exception {
     private static final long serialVersionUID = 1L;
 
     public CreditModifierNotFoundException(UUID id) {
-        super(MessageFormat.format("Credit Modifier not found! (ID: {0}", id));
+        super(MessageFormat.format("Credit Modifier not found! (ID: {0})", id));
     }
 
     public CreditModifierNotFoundException(String name) {
-        super(MessageFormat.format("Credit Modifier not found! (Name: {0}", name));
+        super(MessageFormat.format("Credit Modifier not found! (Name: {0})", name));
     }
 }

@@ -20,7 +20,7 @@ public class LoanUtils {
     }
 
     public static String getStringOfClassName(Class<?> clazz) {
-        String className = ClassUtils.getShortName(clazz.getSimpleName()).concat("'s");
+        String className = ClassUtils.getShortName(clazz.getSimpleName());
         className = Pattern.compile("(?<=[a-z])(?=[A-Z])")
                 .matcher(className)
                 .replaceAll(" ");
