@@ -62,7 +62,7 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository:**
     ```sh
-    git clone https://github.com/your-username/loan-server.git
+    git clone https://github.com/vinodjohn/inloan-server.git
     cd loan-server
     ```
 
@@ -89,7 +89,7 @@ Before you begin, ensure you have the following installed:
     mvn spring-boot:run -Dspring-boot.run.jvmArguments="--enable-preview"
     ```
    
-Note this app doesn't have any preview features of Java.
+_**Note:** This app doesn't have any preview features of Java._
    
 ### Key Files
 
