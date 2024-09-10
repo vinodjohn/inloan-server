@@ -16,11 +16,7 @@ import java.util.stream.IntStream;
  */
 public class LoanUtils {
     public static Sort getSortOfColumn(String sort, String order) {
-        if (order.equalsIgnoreCase("asc")) {
-            return Sort.by(sort).ascending();
-        } else {
-            return Sort.by(sort).descending();
-        }
+        return order.equalsIgnoreCase("asc") ? Sort.by(sort).ascending() : Sort.by(sort).descending();
     }
 
     public static String getStringOfClassName(Class<?> clazz) {
