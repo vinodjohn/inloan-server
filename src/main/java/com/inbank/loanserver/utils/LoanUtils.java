@@ -54,12 +54,22 @@ public class LoanUtils {
                 month = Integer.parseInt(birthDate.substring(2, 4)),
                 day = Integer.parseInt(birthDate.substring(4, 6));
 
-        year += switch (century) {
-            case 1, 2 -> 1800;
-            case 3, 4 -> 1900;
-            case 5, 6 -> 2000;
-            default -> throw new IllegalArgumentException("Invalid century digit");
-        };
+        switch (century) {
+            case 1:
+            case 2:
+                year += 1800;
+                break;
+            case 3:
+            case 4:
+                year += 1900;
+                break;
+            case 5:
+            case 6:
+                year += 2000;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid century digit");
+        }
 
         try {
             LocalDate _ = LocalDate.of(year, month, day);
