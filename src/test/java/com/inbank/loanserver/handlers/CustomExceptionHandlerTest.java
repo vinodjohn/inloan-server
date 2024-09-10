@@ -19,6 +19,12 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
+/**
+ * Tests for CustomExceptionHandler
+ *
+ * @author vinodjohn
+ * @created 10.09.2024
+ */
 @ExtendWith(MockitoExtension.class)
 public class CustomExceptionHandlerTest {
 
