@@ -21,7 +21,7 @@ public class LoanUtilsTest {
     private static final String INVALID_LENGTH_PERSONAL_ID = "1234567890";
     private static final String INVALID_CHARACTERS_PERSONAL_ID = "1234567890A";
     private static final String INVALID_CENTURY_PERSONAL_ID = "79912319999";
-    private static final String INVALID_CHECKSUM_PERSONAL_ID = "39122319998";
+    private static final String INVALID_CHECKSUM_PERSONAL_ID = "39102059998";
     private static final String VALID_BIRTH_DATE = "991231";
     private static final int VALID_CENTURY = 3;
 
@@ -42,7 +42,7 @@ public class LoanUtilsTest {
     @Test
     void shouldReturnFormattedClassName() {
         String className = LoanUtils.getStringOfClassName(LoanUtils.class);
-        assertEquals("Loan Utils's", className);
+        assertEquals("Loan Utils", className);
     }
 
     @Test
