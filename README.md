@@ -13,7 +13,7 @@ the DB. Also, Admin user can modify the credit_modifier, loan limits etc. throug
 
 The front-end application can be found **here** - [GitHub](https://github.com/vinodjohn/inloan-client)
 
-**View this app hosted in AWS here:**  http://54.93.218.156:8080/
+**View this app hosted in AWS here:**  http://3.64.11.255:8080/
 
 ## Table of Contents
 
